@@ -1,4 +1,4 @@
--- NasGUI v2.5 CONTINUATION INTRO WITH BLUR
+-- NasGUI v2.5 CONTINUATION INTRO WITH BLUR + SAFE
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
@@ -13,12 +13,12 @@ local function getSafeGuiParent()
         return playerGui
     end
 
-    -- Fallback: gethui()
-    local ok2, hui = pcall(function()
-        return gethui()
-    end)
-    if ok2 and typeof(hui) == "Instance" then
-        return hui
+    -- Fallback: gethui() only if exists
+    if typeof(gethui) == "function" then
+        local ok2, hui = pcall(gethui)
+        if ok2 and typeof(hui) == "Instance" then
+            return hui
+        end
     end
 
     -- Last resort: CoreGui
@@ -37,7 +37,6 @@ if not GuiParent then
     warn("NasGUI: No safe GUI parent found")
     return
 end
-local RunService = game:GetService("RunService")
 
 -- CLEANUP
 for _, v in ipairs(GuiParent:GetChildren()) do
@@ -45,6 +44,7 @@ for _, v in ipairs(GuiParent:GetChildren()) do
         v:Destroy()
     end
 end
+
 local scr = Instance.new("ScreenGui")
 scr.Name = "NasIntroV2"
 scr.IgnoreGuiInset = true
