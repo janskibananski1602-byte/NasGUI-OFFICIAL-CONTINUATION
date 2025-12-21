@@ -1,15 +1,55 @@
--- NasGUI v2.5 CONTINUATION INTRO WITH BLUR + GUARANTEED LOAD (UPDATED URL)
-local CoreGui = game:GetService("CoreGui")
+-- NasGUI v2.5 CONTINUATION INTRO WITH BLUR
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- SAFE GUI PARENT FUNCTION
+local function getSafeGuiParent()
+    -- Best: PlayerGui
+    local ok, playerGui = pcall(function()
+        return LocalPlayer:WaitForChild("PlayerGui", 5)
+    end)
+    if ok and playerGui then
+        return playerGui
+    end
+
+    -- Fallback: gethui()
+    local ok2, hui = pcall(function()
+        return gethui()
+    end)
+    if ok2 and typeof(hui) == "Instance" then
+        return hui
+    end
+
+    -- Last resort: CoreGui
+    local ok3, coreGui = pcall(function()
+        return game:GetService("CoreGui")
+    end)
+    if ok3 and coreGui then
+        return coreGui
+    end
+
+    return nil
+end
+
+local GuiParent = getSafeGuiParent()
+if not GuiParent then
+    warn("NasGUI: No safe GUI parent found")
+    return
+end
 local RunService = game:GetService("RunService")
 
 -- CLEANUP
-if CoreGui:FindFirstChild("NasIntroV2") then
-    CoreGui.NasIntroV2:Destroy()
+for _, v in ipairs(GuiParent:GetChildren()) do
+    if v.Name == "NasIntroV2" then
+        v:Destroy()
+    end
 end
 local scr = Instance.new("ScreenGui")
 scr.Name = "NasIntroV2"
-scr.Parent = CoreGui
 scr.IgnoreGuiInset = true
+scr.ResetOnSpawn = false
+scr.Parent = GuiParent
 
 -- BLUR EFFECT
 local blur = Instance.new("BlurEffect")
