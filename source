@@ -233,13 +233,13 @@ toggle.Draggable = true
 
 -- Making it circular
 local corner = Instance.new("UICorner", toggle)
-corner.CornerRadius = UDim.new(0.5, 0)  -- 0.5 = full circle
+corner.CornerRadius = UDim.new(0.5, 0)
 
 -- Smooth animations
 local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
 minimize.MouseButton1Click:Connect(function()
     TweenService:Create(mainFrame, tweenInfo, {Size = UDim2.new(0, 450, 0, 0)}):Play()
-    task.wait(0.3)
+    task.wait(0.25)
     mainFrame.Visible = false
     toggle.Visible = true
 end)
