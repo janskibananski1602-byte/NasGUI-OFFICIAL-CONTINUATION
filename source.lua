@@ -54,7 +54,7 @@ end
 -- Background
 local bg = Instance.new("Frame", scr)
 bg.Size = UDim2.new(1, 0, 1, 0)
-bg.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+bg.BackgroundColor3 = Color3.fromRGB(210, 10, 10)
 bg.BackgroundTransparency = 1
 bg.BorderSizePixel = 0
 
@@ -96,7 +96,7 @@ sound:Play()
 
 -- Intro sequence
 
-task.wait(2)
+task.wait(3)
 
 fadeBlur(0, 25, 0.8)
 task.wait(0.8)
@@ -360,7 +360,7 @@ end)
 -- Search input for Main tab
 local searchInput = Instance.new("TextBox", scrollMain)
 searchInput.Size = UDim2.new(1, -20, 0, 40)
-searchInput.PlaceholderText = "Search scripts..."
+searchInput.PlaceholderText = "Search scripts!"
 searchInput.Text = ""
 searchInput.Font = Enum.Font.Gotham
 searchInput.TextSize = 14
@@ -758,7 +758,6 @@ local allButtons = {
     end},
     {"Grab Knife V4", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Grab-Knife-V4-56561"))() end},
     {"Grab Unanchored Parts", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-grab-unanchored-blocks-42313"))() end},
-    {"Inf Yield", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end},
     {"Infinite Yield", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end},
     {"JanDestroy GUI", function() loadstring(game:HttpGet("https://pastebin.com/raw/uJ0P9mfE"))() end},
     {"JanGUI v1", function() loadstring(game:HttpGet("https://pastefy.app/pviNRilX/raw"))() end},
