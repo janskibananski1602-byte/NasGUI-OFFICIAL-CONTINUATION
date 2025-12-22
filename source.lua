@@ -1107,7 +1107,7 @@ end
 -- Player Target Section
 local playerInput = Instance.new("TextBox", scrollMisc)
 playerInput.Size = UDim2.new(1, -20, 0, 40)
-playerInput.PlaceholderText = "Enter Player Name (partial OK)"
+playerInput.PlaceholderText = "Enter Player Name"
 playerInput.Text = ""
 playerInput.Font = Enum.Font.Gotham
 playerInput.TextSize = 14
