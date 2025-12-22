@@ -922,7 +922,7 @@ execButton.MouseButton1Click:Connect(function()
     end)
 end)
 
--- Misc tab - Fixed and tighter layout
+-- Misc tab - Updated with uniform styling
 local scrollMisc = Instance.new("ScrollingFrame", containerMisc)
 scrollMisc.Size = UDim2.new(1, -20, 1, -20)
 scrollMisc.Position = UDim2.new(0, 10, 0, 10)
@@ -933,7 +933,7 @@ scrollMisc.CanvasSize = UDim2.new(0, 0, 0, 0)
 scrollMisc.ZIndex = 1
 
 local miscLayout = Instance.new("UIListLayout", scrollMisc)
-miscLayout.Padding = UDim.new(0, 8)  -- Reduced padding for less space
+miscLayout.Padding = UDim.new(0, 8)
 miscLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 miscLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
@@ -951,13 +951,13 @@ local function findPlayer(name)
     return nil
 end
 
--- Player Target Section
+-- Player Target Section - Input matches button style exactly
 local playerInput = Instance.new("TextBox", scrollMisc)
-playerInput.Size = UDim2.new(1, 0, 0, 35)
+playerInput.Size = UDim2.new(1, -20, 0, 40)
 playerInput.PlaceholderText = "Enter Player Name (partial OK)"
 playerInput.Text = ""
+playerInput.TextSize = 14
 playerInput.Font = Enum.Font.Gotham
-playerInput.TextSize = 16
 playerInput.TextColor3 = Color3.fromRGB(255, 255, 255)
 playerInput.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
 playerInput.BorderColor3 = Color3.fromRGB(255, 50, 50)
@@ -965,12 +965,12 @@ playerInput.ZIndex = 2
 
 local function createPlayerButton(text, callback)
     local btn = Instance.new("TextButton", scrollMisc)
-    btn.Size = UDim2.new(1, 0, 0, 40)
+    btn.Size = UDim2.new(1, -20, 0, 40)
     btn.Text = text
+    btn.TextSize = 14
     btn.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 16
+    btn.Font = Enum.Font.Gotham
     btn.ZIndex = 2
     btn.MouseButton1Click:Connect(function()
         local target = findPlayer(playerInput.Text)
@@ -983,21 +983,34 @@ local function createPlayerButton(text, callback)
 end
 
 createPlayerButton("Bang Player", function(target)
-    -- Simple FE bang using Infinite Yield command style (works in many games)
-    local iy = loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
-    iy:ExecuteCommand("bang " .. target.Name .. " 10")
+    local char = target.Character
+    if not char then return end
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    local hum = char:FindFirstChild("Humanoid")
+    if not hrp or not hum then return end
+
+    local lpChar = LocalPlayer.Character
+    if not lpChar or not lpChar:FindFirstChild("HumanoidRootPart") then return end
+
+    local oldCFrame = lpChar.HumanoidRootPart.CFrame
+
+    lpChar.HumanoidRootPart.CFrame = hrp.CFrame
+
+    for i = 1, 30 do
+        hrp.Velocity = Vector3.new(0, 100, 0)
+        task.wait()
+    end
+
+    lpChar.HumanoidRootPart.CFrame = oldCFrame
 end)
 
 createPlayerButton("Fling Player", function(target)
     local hrp = target.Character:FindFirstChild("HumanoidRootPart")
     if hrp then
         local bv = Instance.new("BodyVelocity", hrp)
-        bv.Velocity = Vector3.new(0, 5000, 0)
+        bv.Velocity = Vector3.new(math.random(-5000,5000), 5000, math.random(-5000,5000))
         bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
         game.Debris:AddItem(bv, 0.5)
-        task.delay(0.1, function()
-            hrp.Velocity = Vector3.new(math.random(-5000,5000), 5000, math.random(-5000,5000))
-        end)
     end
 end)
 
@@ -1020,13 +1033,13 @@ local spacer1 = Instance.new("Frame", scrollMisc)
 spacer1.Size = UDim2.new(1, 0, 0, 10)
 spacer1.BackgroundTransparency = 1
 
--- Amount Section
+-- Amount Section - Input matches button style
 local amountInput = Instance.new("TextBox", scrollMisc)
-amountInput.Size = UDim2.new(1, 0, 0, 35)
+amountInput.Size = UDim2.new(1, -20, 0, 40)
 amountInput.PlaceholderText = "Enter Amount"
 amountInput.Text = ""
+amountInput.TextSize = 14
 amountInput.Font = Enum.Font.Gotham
-amountInput.TextSize = 16
 amountInput.TextColor3 = Color3.fromRGB(255, 255, 255)
 amountInput.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
 amountInput.BorderColor3 = Color3.fromRGB(255, 50, 50)
@@ -1034,12 +1047,12 @@ amountInput.ZIndex = 2
 
 local function createAmountButton(text, callback)
     local btn = Instance.new("TextButton", scrollMisc)
-    btn.Size = UDim2.new(1, 0, 0, 40)
+    btn.Size = UDim2.new(1, -20, 0, 40)
     btn.Text = text
+    btn.TextSize = 14
     btn.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 16
+    btn.Font = Enum.Font.Gotham
     btn.ZIndex = 2
     btn.MouseButton1Click:Connect(function()
         local val = tonumber(amountInput.Text)
@@ -1072,7 +1085,7 @@ local spacer2 = Instance.new("Frame", scrollMisc)
 spacer2.Size = UDim2.new(1, 0, 0, 15)
 spacer2.BackgroundTransparency = 1
 
--- Remaining buttons (tighter spacing via layout padding)
+-- Remaining buttons (same style)
 createButton(scrollMisc, "Grab Knife V4", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Grab-Knife-V4-56561"))() end)
 createButton(scrollMisc, "[Ancient] NasGUI V1.0", function() loadstring(game:HttpGet("https://pastefy.app/P7a8Lj5Y/raw"))() end)
 createButton(scrollMisc, "NasGUI V1.6 Reborn", function()
@@ -1099,34 +1112,4 @@ createButton(scrollMisc, "Clone Yourself", function()
 end)
 createButton(scrollMisc, "Void Disabler", function()
     local VOID_HEIGHT = -math.huge
-    game:GetService("RunService").Heartbeat:Connect(function()
-        for _, player in ipairs(game.Players:GetPlayers()) do
-            local char = player.Character
-            local root = char and char:FindFirstChild("HumanoidRootPart")
-            if root and root.Position.Y < VOID_HEIGHT then
-                root.Velocity = Vector3.zero
-                root.CFrame = CFrame.new(root.Position.X, 10, root.Position.Z)
-            end
-        end
-    end)
-end)
-createButton(scrollMisc, "Walk On Walls", function() loadstring(game:HttpGet("https://rawscripts.net/raw/FE-walk-on-walls_206"))() end)
-createButton(scrollMisc, "Security Cameras", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FNAF-Inspired-Camera-Script-17367"))() end)
-createButton(scrollMisc, "RC7", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Rc7-29631"))() end)
-createButton(scrollMisc, "Fly GUI v3", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Gui-V3-Turkish-48460"))() end)
-
--- Executor detection notification
-local executorName = "Unknown"
-if syn then executorName = "Synapse X"
-elseif KRNL_LOADED then executorName = "KRNL"
-elseif fluxus then executorName = "Fluxus"
-elseif identifyexecutor then executorName = identifyexecutor()
-end
-
-StarterGui:SetCore("SendNotification", {
-    Title = "NasGUI v2.5 Continuation";
-    Text = "Executor: "..executorName;
-    Duration = 5;
-})
-
-print("~~~~~~~~~~~~~~~~~~~~ Made with LOVE! ~~~~~~~~~~~~~~~~~~~~")
+    game:Get
