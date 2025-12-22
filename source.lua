@@ -317,8 +317,8 @@ end)
 
 -- Plugins tab
 local scrollPlugins = Instance.new("ScrollingFrame", containerPlugins)
-scrollPlugins.Size = UDim2.new(1, -20, 1, -50)
-scrollPlugins.Position = UDim2.new(0, 10, 0, 40)
+scrollPlugins.Size = UDim2.new(1, -20, 1, -20)
+scrollPlugins.Position = UDim2.new(0, 10, 0, 10)
 scrollPlugins.BackgroundTransparency = 1
 scrollPlugins.ScrollBarThickness = 8
 scrollPlugins.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
@@ -333,10 +333,10 @@ pluginLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
     scrollPlugins.CanvasSize = UDim2.new(0, 0, 0, pluginLayout.AbsoluteContentSize.Y + 20)
 end)
 
--- Plugin search box
+-- Plugin search box (same style as buttons, hidden if no plugins)
 local pluginSearch = Instance.new("TextBox", containerPlugins)
-pluginSearch.Size = UDim2.new(1, -20, 0, 30)
-pluginSearch.Position = UDim2.new(0, 10, 0, 5)
+pluginSearch.Size = UDim2.new(1, -20, 0, 40)
+pluginSearch.Position = UDim2.new(0, 10, 0, 10)
 pluginSearch.PlaceholderText = "Search Plugins..."
 pluginSearch.Text = ""
 pluginSearch.Font = Enum.Font.Gotham
@@ -345,6 +345,7 @@ pluginSearch.TextColor3 = Color3.fromRGB(255, 255, 255)
 pluginSearch.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
 pluginSearch.BorderSizePixel = 0
 pluginSearch.ZIndex = 3
+pluginSearch.Visible = false
 
 local pluginButtonInstances = {}
 
@@ -360,7 +361,6 @@ local function AddPlugin(name, callback)
     btn.Visible = true
     btn.MouseButton1Click:Connect(callback)
     table.insert(pluginButtonInstances, {name = name:lower(), button = btn})
-    return btn
 end
 
 local function LoadPlugins()
@@ -383,7 +383,12 @@ local function LoadPlugins()
 end
 
 local Plugins = LoadPlugins() or {}
+
 if #Plugins > 0 then
+    pluginSearch.Visible = true
+    scrollPlugins.Position = UDim2.new(0, 10, 0, 60)
+    scrollPlugins.Size = UDim2.new(1, -20, 1, -70)
+
     for _, plugin in ipairs(Plugins) do
         AddPlugin(plugin.Name .. " | by " .. (plugin.Author or "Unknown"), function()
             task.spawn(plugin.Run)
@@ -391,7 +396,7 @@ if #Plugins > 0 then
     end
 end
 
--- Plugin search
+-- Plugin search functionality
 pluginSearch.FocusLost:Connect(function(enterPressed)
     if enterPressed then
         local query = pluginSearch.Text:lower()
@@ -431,10 +436,10 @@ mainLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
     scrollMain.CanvasSize = UDim2.new(0, 0, 0, mainLayout.AbsoluteContentSize.Y + 20)
 end)
 
--- Main search box
+-- Main search box (same style as buttons)
 local mainSearch = Instance.new("TextBox", containerMain)
-mainSearch.Size = UDim2.new(1, -20, 0, 30)
-mainSearch.Position = UDim2.new(0, 10, 0, 5)
+mainSearch.Size = UDim2.new(1, -20, 0, 40)
+mainSearch.Position = UDim2.new(0, 10, 0, 10)
 mainSearch.PlaceholderText = "Search Scripts..."
 mainSearch.Text = ""
 mainSearch.Font = Enum.Font.Gotham
@@ -1098,7 +1103,7 @@ mainSearch.Focused:Connect(function()
     end
 end)
 
--- Executor tab (no search)
+-- Executor tab
 local inputBox = Instance.new("TextBox", containerExec)
 inputBox.Size = UDim2.new(1, 0, 0.7, 0)
 inputBox.Position = UDim2.new(0, 0, 0, 0)
@@ -1129,7 +1134,7 @@ execButton.MouseButton1Click:Connect(function()
     end)
 end)
 
--- Misc tab (no search)
+-- Misc tab
 local scrollMisc = Instance.new("ScrollingFrame", containerMisc)
 scrollMisc.Size = UDim2.new(1, -20, 1, -20)
 scrollMisc.Position = UDim2.new(0, 10, 0, 10)
