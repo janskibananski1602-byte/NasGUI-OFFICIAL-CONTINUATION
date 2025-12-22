@@ -922,7 +922,7 @@ execButton.MouseButton1Click:Connect(function()
     end)
 end)
 
--- Misc tab - Rebuilt as requested
+-- Misc tab - Fixed and tighter layout
 local scrollMisc = Instance.new("ScrollingFrame", containerMisc)
 scrollMisc.Size = UDim2.new(1, -20, 1, -20)
 scrollMisc.Position = UDim2.new(0, 10, 0, 10)
@@ -933,14 +933,15 @@ scrollMisc.CanvasSize = UDim2.new(0, 0, 0, 0)
 scrollMisc.ZIndex = 1
 
 local miscLayout = Instance.new("UIListLayout", scrollMisc)
-miscLayout.Padding = UDim.new(0, 15)
+miscLayout.Padding = UDim.new(0, 8)  -- Reduced padding for less space
 miscLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 miscLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    scrollMisc.CanvasSize = UDim2.new(0, 0, 0, miscLayout.AbsoluteContentSize.Y + 30)
+    scrollMisc.CanvasSize = UDim2.new(0, 0, 0, miscLayout.AbsoluteContentSize.Y + 20)
 end)
 
 local function findPlayer(name)
+    if name == "" then return nil end
     name = name:lower()
     for _, p in pairs(Players:GetPlayers()) do
         if p.Name:lower():find(name) == 1 then
@@ -953,7 +954,7 @@ end
 -- Player Target Section
 local playerInput = Instance.new("TextBox", scrollMisc)
 playerInput.Size = UDim2.new(1, 0, 0, 35)
-playerInput.PlaceholderText = "Enter Player Name"
+playerInput.PlaceholderText = "Enter Player Name (partial OK)"
 playerInput.Text = ""
 playerInput.Font = Enum.Font.Gotham
 playerInput.TextSize = 16
@@ -972,47 +973,51 @@ local function createPlayerButton(text, callback)
     btn.TextSize = 16
     btn.ZIndex = 2
     btn.MouseButton1Click:Connect(function()
-        local targetName = playerInput.Text
-        local target = findPlayer(targetName)
-        if target then
+        local target = findPlayer(playerInput.Text)
+        if target and target.Character then
             callback(target)
         else
-            warn("Player not found: " .. targetName)
+            warn("Player not found or no character: " .. playerInput.Text)
         end
     end)
 end
 
 createPlayerButton("Bang Player", function(target)
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
-    task.wait(1)
-    game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(";bang "..target.Name.." 5", "All")
+    -- Simple FE bang using Infinite Yield command style (works in many games)
+    local iy = loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+    iy:ExecuteCommand("bang " .. target.Name .. " 10")
 end)
 
 createPlayerButton("Fling Player", function(target)
-    if target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-        local hrp = target.Character.HumanoidRootPart
-        local body = Instance.new("BodyVelocity", hrp)
-        body.Velocity = Vector3.new(9999, 9999, 9999)
-        body.MaxForce = Vector3.new(1e9, 1e9, 1e9)
-        game.Debris:AddItem(body, 0.2)
+    local hrp = target.Character:FindFirstChild("HumanoidRootPart")
+    if hrp then
+        local bv = Instance.new("BodyVelocity", hrp)
+        bv.Velocity = Vector3.new(0, 5000, 0)
+        bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+        game.Debris:AddItem(bv, 0.5)
+        task.delay(0.1, function()
+            hrp.Velocity = Vector3.new(math.random(-5000,5000), 5000, math.random(-5000,5000))
+        end)
     end
 end)
 
 createPlayerButton("Teleport to Player", function(target)
-    if target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-        LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame + Vector3.new(2,0,0)
+    local hrp = target.Character:FindFirstChild("HumanoidRootPart")
+    if hrp and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        LocalPlayer.Character.HumanoidRootPart.CFrame = hrp.CFrame * CFrame.new(0, 0, -3)
     end
 end)
 
 createPlayerButton("Kill Player", function(target)
-    if target.Character and target.Character:FindFirstChild("Humanoid") then
-        target.Character.Humanoid.Health = 0
+    local hum = target.Character:FindFirstChild("Humanoid")
+    if hum then
+        hum.Health = 0
     end
 end)
 
--- Spacer
+-- Small spacer
 local spacer1 = Instance.new("Frame", scrollMisc)
-spacer1.Size = UDim2.new(1, 0, 0, 30)
+spacer1.Size = UDim2.new(1, 0, 0, 10)
 spacer1.BackgroundTransparency = 1
 
 -- Amount Section
@@ -1041,7 +1046,7 @@ local function createAmountButton(text, callback)
         if val then
             callback(val)
         else
-            warn("Invalid number")
+            warn("Invalid number entered")
         end
     end)
 end
@@ -1062,12 +1067,12 @@ createAmountButton("Set Gravity", function(val)
     workspace.Gravity = val
 end)
 
--- Spacer
+-- Small spacer
 local spacer2 = Instance.new("Frame", scrollMisc)
-spacer2.Size = UDim2.new(1, 0, 0, 40)
+spacer2.Size = UDim2.new(1, 0, 0, 15)
 spacer2.BackgroundTransparency = 1
 
--- Remaining original Misc buttons
+-- Remaining buttons (tighter spacing via layout padding)
 createButton(scrollMisc, "Grab Knife V4", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Grab-Knife-V4-56561"))() end)
 createButton(scrollMisc, "[Ancient] NasGUI V1.0", function() loadstring(game:HttpGet("https://pastefy.app/P7a8Lj5Y/raw"))() end)
 createButton(scrollMisc, "NasGUI V1.6 Reborn", function()
