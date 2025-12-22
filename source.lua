@@ -1,4 +1,4 @@
--- NasGUI v2.5 Continuation - FULL SCRIPT (Copy-Paste Ready)
+-- NasGUI v2.5 Continuation
 
 local CoreGui = game:GetService("CoreGui")
 local RunService = game:GetService("RunService")
@@ -70,7 +70,7 @@ local title = Instance.new("TextLabel", scr)
 title.Size = UDim2.new(1, -40, 0, 80)
 title.Position = UDim2.new(0, 20, 0.35, 0)
 title.BackgroundTransparency = 1
-title.Text = "NasGUI v2.5 Continuation"
+title.Text = "Loading NasGUI v2.5 Continuation;"
 title.Font = Enum.Font.GothamBlack
 title.TextSize = 40
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -81,9 +81,9 @@ local sub = Instance.new("TextLabel", scr)
 sub.Size = UDim2.new(1, -40, 0, 40)
 sub.Position = UDim2.new(0, 20, 0.5, 0)
 sub.BackgroundTransparency = 1
-sub.Text = "READY TO BREACH THE ENVIRONMENT!"
+sub.Text = "🔥 READY TO BREACH THE ENVIRONMENT! 🔥"
 sub.Font = Enum.Font.GothamBold
-sub.TextSize = 24
+sub.TextSize = 20
 sub.TextColor3 = Color3.fromRGB(255, 255, 255)
 sub.TextTransparency = 1
 sub.TextScaled = true
@@ -101,58 +101,27 @@ task.wait(0.8)
 fade(bg, 1, 0, 1.0)
 fade(title, 1, 0, 1.0)
 fade(sub, 1, 0, 1.0)
-task.wait(1.0)
-
 task.wait(1.2)
+
+task.wait(1.5)
 
 fade(title, 0, 1, 0.8)
 fade(sub, 0, 1, 0.8)
 fade(bg, 0, 1, 0.8)
-task.wait(0.8)
+task.wait(1)
 
 task.wait(0.5)
 fadeBlur(25, 0, 1.0)
-task.wait(1.0)
+task.wait(1.2)
 
 scr:Destroy()
 blur:Destroy()
-
-print(">> NasGUI v2.5 Continuation loaded successfully!")
 
 -- Services
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local TweenService = game:GetService("TweenService")
 local StarterGui = game:GetService("StarterGui")
-
--- Startup sound
-local startupSound = Instance.new("Sound", workspace)
-startupSound.SoundId = "rbxassetid://126083075694948"
-startupSound.Volume = 5
-startupSound:Play()
-
--- Billboard on player head
-pcall(function()
-    local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-    local head = char:WaitForChild("Head")
-    local msg = "NasGUI v2.5 Loaded! | Made by: Nas9229alt & 1602sasa2/Jan"
-    local Billboard = Instance.new("BillboardGui", head)
-    Billboard.Size = UDim2.new(0, 200, 0, 50)
-    Billboard.StudsOffset = Vector3.new(0, 2, 0)
-    Billboard.Adornee = head
-    Billboard.AlwaysOnTop = true
-    Billboard.Name = "AutoChatAd"
-    local text = Instance.new("TextLabel", Billboard)
-    text.Size = UDim2.new(1, 0, 1, 0)
-    text.BackgroundTransparency = 1
-    text.TextScaled = true
-    text.TextColor3 = Color3.fromRGB(255, 0, 0)
-    text.Font = Enum.Font.SourceSansBold
-    text.Text = msg
-    task.delay(10, function()
-        Billboard:Destroy()
-    end)
-end)
 
 -- Main GUI setup
 local gui = Instance.new("ScreenGui", game.CoreGui)
@@ -162,18 +131,11 @@ gui.ResetOnSpawn = false
 local mainFrame = Instance.new("Frame", gui)
 mainFrame.Size = UDim2.new(0, 450, 0, 400)
 mainFrame.Position = UDim2.new(0.5, -225, 0.5, -200)
-mainFrame.BackgroundColor3 = Color3.fromRGB(20, 0, 0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(25, 5, 5)
 mainFrame.BorderColor3 = Color3.fromRGB(255, 50, 50)
 mainFrame.BorderSizePixel = 2
 mainFrame.Active = true
 mainFrame.Draggable = true
-
-local bgImage = Instance.new("ImageLabel", mainFrame)
-bgImage.Size = UDim2.new(1, 0, 1, 0)
-bgImage.BackgroundTransparency = 1
-bgImage.Image = "rbxassetid://82411403129832"
-bgImage.ImageTransparency = 0.3
-bgImage.ZIndex = 0
 
 -- Title
 local titleLabel = Instance.new("TextLabel", mainFrame)
@@ -225,11 +187,11 @@ toggle.Draggable = true
 local corner = Instance.new("UICorner", toggle)
 corner.CornerRadius = UDim.new(0.5, 0)
 
-local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
+local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.InOut)
 
 minimize.MouseButton1Click:Connect(function()
     TweenService:Create(mainFrame, tweenInfo, {Size = UDim2.new(0, 450, 0, 0)}):Play()
-    task.wait(0.3)
+    task.wait(0.25)
     mainFrame.Visible = false
     toggle.Visible = true
 end)
@@ -1267,4 +1229,34 @@ StarterGui:SetCore("SendNotification", {
     Duration = 5;
 })
 
-print("~~~~~~~~~~~~~~~~~~~~ Made with LOVE! ~~~~~~~~~~~~~~~~~~~~")
+-- Billboard on player head
+pcall(function()
+    local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local head = char:WaitForChild("Head")
+    local msg = "NasGUI v2.5 Loaded! | Made by: Nas9229alt & 1602sasa2/Jan"
+    local Billboard = Instance.new("BillboardGui", head)
+    Billboard.Size = UDim2.new(0, 200, 0, 50)
+    Billboard.StudsOffset = Vector3.new(0, 2, 0)
+    Billboard.Adornee = head
+    Billboard.AlwaysOnTop = true
+    Billboard.Name = "AutoChatAd"
+    local text = Instance.new("TextLabel", Billboard)
+    text.Size = UDim2.new(1, 0, 1, 0)
+    text.BackgroundTransparency = 1
+    text.TextScaled = true
+    text.TextColor3 = Color3.fromRGB(255, 0, 0)
+    text.Font = Enum.Font.SourceSansBold
+    text.Text = msg
+    task.delay(10, function()
+        Billboard:Destroy()
+    end)
+end)
+
+-- Startup sound
+local startupSound = Instance.new("Sound", workspace)
+startupSound.SoundId = "rbxassetid://126083075694948"
+startupSound.Volume = 2.5
+startupSound:Play()
+
+print(">> NasGUI v2.5 Continuation loaded successfully!")
+print("~~~~~ Made with LOVE! ~~~~~")
