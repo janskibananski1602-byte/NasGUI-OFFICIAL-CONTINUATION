@@ -315,15 +315,15 @@ createTabButton("Plugins", 330, function()
     containerPlugins.Visible = true
 end)
 
--- Plugins tab: Info box (dark red box with sharp corners)
+-- Plugins tab: Larger info box (sharp corners, more height for full text visibility)
 local infoBox = Instance.new("Frame", containerPlugins)
-infoBox.Size = UDim2.new(1, -20, 0, 160)
+infoBox.Size = UDim2.new(1, -20, 0, 240)  -- Increased height significantly
 infoBox.Position = UDim2.new(0, 10, 0, 10)
-infoBox.BackgroundColor3 = Color3.fromRGB(80, 0, 0)  -- Dark red
+infoBox.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
 infoBox.BorderColor3 = Color3.fromRGB(255, 50, 50)
 infoBox.BorderSizePixel = 2
 infoBox.ZIndex = 2
--- No UICorner for sharp edges
+-- No UICorner → sharp corners
 
 local infoText = Instance.new("TextLabel", infoBox)
 infoText.Size = UDim2.new(1, -20, 1, -20)
@@ -353,17 +353,17 @@ Now go make some insane plugins and dominate the environment 🗿💥
 
 - Nas9229alt]]
 infoText.TextColor3 = Color3.fromRGB(255, 255, 255)
-infoText.TextSize = 14
+infoText.TextSize = 15  -- Slightly larger text for better readability
 infoText.Font = Enum.Font.Gotham
 infoText.TextXAlignment = Enum.TextXAlignment.Left
 infoText.TextYAlignment = Enum.TextYAlignment.Top
 infoText.TextWrapped = true
 infoText.ZIndex = 3
 
--- Plugins tab scrolling frame (below the info box)
+-- Plugins tab scrolling frame (adjusted to fit below the larger info box)
 local scrollPlugins = Instance.new("ScrollingFrame", containerPlugins)
-scrollPlugins.Size = UDim2.new(1, -20, 1, -190)  -- More space below info box
-scrollPlugins.Position = UDim2.new(0, 10, 0, 180)
+scrollPlugins.Size = UDim2.new(1, -20, 1, -270)  -- More room for the taller info box
+scrollPlugins.Position = UDim2.new(0, 10, 0, 260)
 scrollPlugins.BackgroundTransparency = 1
 scrollPlugins.ScrollBarThickness = 8
 scrollPlugins.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
