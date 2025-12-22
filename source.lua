@@ -315,9 +315,9 @@ createTabButton("Plugins", 330, function()
     containerPlugins.Visible = true
 end)
 
--- Plugins tab: Large info box with full code visible
+-- Plugins tab: Info box (smaller height to prevent clipping)
 local infoBox = Instance.new("Frame", containerPlugins)
-infoBox.Size = UDim2.new(1, -20, 0, 300)
+infoBox.Size = UDim2.new(1, -20, 0, 240)  -- Reduced height to fit safely
 infoBox.Position = UDim2.new(0, 10, 0, 10)
 infoBox.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
 infoBox.BorderColor3 = Color3.fromRGB(255, 50, 50)
@@ -360,10 +360,28 @@ infoText.TextYAlignment = Enum.TextYAlignment.Top
 infoText.TextWrapped = true
 infoText.ZIndex = 3
 
--- Plugins scrolling frame
+-- Plugins tab: ScrollingFrame for the info box itself (so text scrolls if needed)
+local infoScroll = Instance.new("ScrollingFrame", infoBox)
+infoScroll.Size = UDim2.new(1, -20, 1, -20)
+infoScroll.Position = UDim2.new(0, 10, 0, 10)
+infoScroll.BackgroundTransparency = 1
+infoScroll.ScrollBarThickness = 6
+infoScroll.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
+infoScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+infoScroll.ZIndex = 3
+
+infoText.Parent = infoScroll  -- Move text inside scrolling frame
+
+-- Auto-adjust canvas for info text
+infoText:GetPropertyChangedSignal("TextBounds"):Connect(function()
+    infoScroll.CanvasSize = UDim2.new(0, 0, 0, infoText.TextBounds.Y + 20)
+end)
+infoScroll.CanvasSize = UDim2.new(0, 0, 0, infoText.TextBounds.Y + 20)
+
+-- Plugins list scrolling frame (below info box)
 local scrollPlugins = Instance.new("ScrollingFrame", containerPlugins)
-scrollPlugins.Size = UDim2.new(1, -20, 1, -330)
-scrollPlugins.Position = UDim2.new(0, 10, 0, 320)
+scrollPlugins.Size = UDim2.new(1, -20, 1, -270)  -- Adjusted for smaller info box
+scrollPlugins.Position = UDim2.new(0, 10, 0, 260)
 scrollPlugins.BackgroundTransparency = 1
 scrollPlugins.ScrollBarThickness = 8
 scrollPlugins.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
