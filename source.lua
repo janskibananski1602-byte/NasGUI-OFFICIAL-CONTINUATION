@@ -315,10 +315,10 @@ createTabButton("Plugins", 330, function()
     containerPlugins.Visible = true
 end)
 
--- Plugins tab: Info box
+-- Plugins tab: Info box (dark red box with explanation)
 local infoBox = Instance.new("Frame", containerPlugins)
 infoBox.Size = UDim2.new(1, -20, 0, 120)
-infoBox.Position = UDim2.new(0, 10, 0, 0)
+infoBox.Position = UDim2.new(0, 10, 0, 10)
 infoBox.BackgroundColor3 = Color3.fromRGB(80, 0, 0)  -- Dark red
 infoBox.BorderColor3 = Color3.fromRGB(255, 50, 50)
 infoBox.BorderSizePixel = 2
@@ -331,12 +331,15 @@ local infoText = Instance.new("TextLabel", infoBox)
 infoText.Size = UDim2.new(1, -20, 1, -20)
 infoText.Position = UDim2.new(0, 10, 0, 10)
 infoText.BackgroundTransparency = 1
-infoText.Text = [[PLUGINS SYSTEM
+infoText.Text = [[NasGUI Plugins System
 
 How to use:
-1. Create a folder named "NasPlugins" in your executor workspace (auto-created on first load).
-2. Place .nas files inside (Lua scripts that return a table with: Name (string), Author (optional string), Run (function)).
-3. Restart/reload the GUI or re-open Plugins tab to load them.
+1. Create a folder named "NasPlugins" in your executor workspace.
+2. Place your .nas plugin files inside it.
+3. Each plugin must be a Lua table returned by the file with:
+   - Name (string)
+   - Author (string, optional)
+   - Run (function)
 
 Example plugin code:
 return {
@@ -347,19 +350,20 @@ return {
     end
 }
 
-Enjoy custom plugins!]]
+Plugins will auto-load when you open the Plugins tab.
+Enjoy extending NasGUI!]]
 infoText.TextColor3 = Color3.fromRGB(255, 255, 255)
 infoText.TextSize = 14
 infoText.Font = Enum.Font.Gotham
 infoText.TextXAlignment = Enum.TextXAlignment.Left
 infoText.TextYAlignment = Enum.TextYAlignment.Top
 infoText.TextWrapped = true
-infoText.ZIndex = 2
+infoText.ZIndex = 3
 
--- Plugins tab scrolling frame (moved below info box)
+-- Plugins tab scrolling frame (placed below info box)
 local scrollPlugins = Instance.new("ScrollingFrame", containerPlugins)
-scrollPlugins.Size = UDim2.new(1, -20, 1, -140)  -- Adjusted to fit below info box
-scrollPlugins.Position = UDim2.new(0, 10, 0, 130)
+scrollPlugins.Size = UDim2.new(1, -20, 1, -150)  -- Leaves space for info box
+scrollPlugins.Position = UDim2.new(0, 10, 0, 140)
 scrollPlugins.BackgroundTransparency = 1
 scrollPlugins.ScrollBarThickness = 8
 scrollPlugins.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
@@ -415,7 +419,7 @@ if #Plugins > 0 then
     end
 end
 
--- Main tab scrolling frame (bright red scroll bar)
+-- Main tab scrolling frame
 local scrollMain = Instance.new("ScrollingFrame", containerMain)
 scrollMain.Size = UDim2.new(1, 0, 1, 0)
 scrollMain.Position = UDim2.new(0, 0, 0, 0)
@@ -668,18 +672,500 @@ local buttons = {
     {"FE NPC Control", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Control-script-Credits-to-patrick-34156"))() end},
     {"FE Sword Tool", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-Classic-Sword-Fling-Tool-16842"))() end},
     {"Drop-Kick Tool FE", function()
-        -- [Drop-Kick code unchanged, same as before]
+        local Players = game:GetService("Players")
+        local RunService = game:GetService("RunService")
+        local lp = Players.LocalPlayer
+        local char = lp.Character or lp.CharacterAdded:Wait()
+        local hrp = char:WaitForChild("HumanoidRootPart")
+        local hum = char:WaitForChild("Humanoid")
+        local tool = Instance.new("Tool")
+        tool.Name = "Drop Kick"
+        tool.RequiresHandle = false
+        tool.CanBeDropped = false
+        tool.Parent = lp.Backpack
+        local anim = Instance.new("Animation")
+        anim.AnimationId = "rbxassetid://45737360"
+        local track = hum:LoadAnimation(anim)
+        local canUse = true
+        local cooldown = 1
+        local function dash(duration, dashSpeed)
+            local startTime = tick()
+            local originalWalkSpeed = hum.WalkSpeed
+            hum.WalkSpeed = 0
+            local connection
+            connection = RunService.Heartbeat:Connect(function(dt)
+                if tick() - startTime > duration then
+                    connection:Disconnect()
+                    hum.WalkSpeed = originalWalkSpeed
+                    if track.IsPlaying then track:Stop() end
+                    return
+                end
+                local lookDir = hrp.CFrame.LookVector
+                hrp.CFrame = hrp.CFrame + lookDir * dashSpeed * dt
+            end)
+        end
+        local hiddenfling = false
+        local movel = 0.1
+        local flingPower = 999999
+        task.spawn(function()
+            while true do
+                RunService.Heartbeat:Wait()
+                if hiddenfling and hrp then
+                    local vel = hrp.Velocity
+                    hrp.Velocity = vel * flingPower + Vector3.new(0, flingPower, 0)
+                    RunService.RenderStepped:Wait()
+                    if hrp then hrp.Velocity = vel end
+                    RunService.Stepped:Wait()
+                    if hrp then
+                        hrp.Velocity = vel + Vector3.new(0, movel, 0)
+                        movel = -movel
+                    end
+                end
+            end
+        end)
+        tool.Activated:Connect(function()
+            if not canUse then return end
+            canUse = false
+            if track.IsPlaying then track:Stop() end
+            track:Play()
+            track:AdjustSpeed(1.7)
+            hiddenfling = true
+            task.delay(1, function() hiddenfling = false end)
+            dash(1, 39)
+            task.delay(cooldown, function() canUse = true end)
+        end)
     end},
-    -- [All other buttons unchanged...]
+    {"RemoteSpy V3", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-RemoteSpy-v3-33731"))() end},
+    {"Mobile Shiftlock", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Shiftlock-For-Mobile-Script-36530"))() end},
+    {"Adonis Bypass", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-adonis-admin-bypass-19375"))() end},
+    {"FE Omniman R15", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-Omniman-49493"))() end},
+    {"Retro Animations R6", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-Classic-Animations-2971"))() end},
+    {"MorfOS", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/formidy/morfOS/refs/heads/main/main.lua"))() end},
+    {"Private Chat", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-a-secretive-Fe-chat-for-communication-without-filtering-49526"))() end},
+    {"FE Hug R6", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fe-hug-script-v1-33471"))() end},
+    {"FilteringEnabled Status", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FE-checker-41897"))() end},
+    {"Client-Side AK-47", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-EPIC-FE-AK47-5040"))() end},
+    {"Backflip", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Backflip-Script-18595"))() end},
+    {"Spin Skybox", function()
+        local lighting = game:GetService("Lighting")
+        local sky = lighting:FindFirstChildOfClass("Sky")
+        if not sky then warn("Sky object not found under Lighting") return end
+        local speed = 360 * 1000000
+        RunService.RenderStepped:Connect(function(dt)
+            local current = sky.SkyboxOrientation
+            local newX = (current.X + speed * dt) % 360
+            sky.SkyboxOrientation = Vector3.new(newX, current.Y, current.Z)
+        end)
+    end},
+    {"Nas9229alt Punch Tool", function() loadstring(game:HttpGet("https://pastefy.app/nZEjE2JU/raw?part=Punch%20Fling%20by%20Nas9229alt.lua"))() end},
+    {"ESP", function()
+        local Players = game:GetService("Players")
+        local Workspace = game:GetService("Workspace")
+        local LocalPlayer = Players.LocalPlayer
+        local function createHighlight(parent, color)
+            local existing = parent:FindFirstChild("NasESPHighlight")
+            if existing then existing:Destroy() end
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "NasESPHighlight"
+            highlight.FillColor = color
+            highlight.OutlineColor = color
+            highlight.FillTransparency = 0.5
+            highlight.OutlineTransparency = 0
+            highlight.Adornee = parent
+            highlight.Parent = parent
+        end
+        local function updatePlayerESP(player)
+            if player == LocalPlayer then return end
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                createHighlight(player.Character, Color3.fromRGB(255,0,0))
+            end
+            player.CharacterAdded:Connect(function(char)
+                char:WaitForChild("HumanoidRootPart")
+                createHighlight(char, Color3.fromRGB(255,0,0))
+            end)
+        end
+        for _, player in pairs(Players:GetPlayers()) do updatePlayerESP(player) end
+        Players.PlayerAdded:Connect(updatePlayerESP)
+        local function updateNPCESP(npc)
+            if npc:IsA("Model") and npc:FindFirstChild("Humanoid") and not Players:GetPlayerFromCharacter(npc) then
+                createHighlight(npc, Color3.fromRGB(0,0,255))
+            end
+        end
+        for _, obj in pairs(Workspace:GetDescendants()) do updateNPCESP(obj) end
+        Workspace.DescendantAdded:Connect(updateNPCESP)
+        print("[ESP] Active: Players=Red, NPCs=Blue")
+    end},
+    {"Friends ESP", function()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local function createHighlight(character, color)
+            local existing = character:FindFirstChild("NasFriendsESP")
+            if existing then existing:Destroy() end
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "NasFriendsESP"
+            highlight.FillColor = color
+            highlight.OutlineColor = color
+            highlight.FillTransparency = 0.5
+            highlight.OutlineTransparency = 0
+            highlight.Adornee = character
+            highlight.Parent = character
+        end
+        local function applyToPlayer(player)
+            if player == LocalPlayer then return end
+            if not LocalPlayer:IsFriendsWith(player.UserId) then return end
+            if player.Character then
+                createHighlight(player.Character, Color3.fromRGB(255,255,0))
+            end
+            player.CharacterAdded:Connect(function(char)
+                createHighlight(char, Color3.fromRGB(255,255,0))
+            end)
+        end
+        for _, player in pairs(Players:GetPlayers()) do applyToPlayer(player) end
+        Players.PlayerAdded:Connect(applyToPlayer)
+        print("[Friends ESP] Active: highlighting all friends in yellow")
+    end},
+    {"FORCE TOUCH GUI", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FORCE-TOUCH-GUI-UNIVERSAL-OP-CAN-KILL-OR-KICK-43469"))() end},
+    {"FE R15 Sonic", function() loadstring(game:HttpGet("https://pastefy.app/XCtZsGhP/raw"))() end},
+    {"FE R15 Invincible Flight", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invinicible-Flight-R15-45414"))() end},
+    {"JanGUI V1.0 Normal", function()
+        local u = string.char(104,116,116,112,115,58,47,47,112,97,115,116,101,98,105,110,46,99,111,109,47,114,97,119,47,102,57,55,68,50,74,118,85)
+        loadstring(game:HttpGet(u, true))()
+    end},
+    {"Fire TouchInterests", function()
+        local Workspace = game:GetService("Workspace")
+        local RunService = game:GetService("RunService")
+        local toggled = false
+        local connection
+        local function fireTouches()
+            for _, part in pairs(Workspace:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    for _, touch in pairs(part:GetTouchingParts()) do
+                        for _, v in pairs(part:GetChildren()) do
+                            if v:IsA("TouchTransmitter") then
+                                firetouchinterest(touch, part, 0)
+                                firetouchinterest(touch, part, 1)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        if not toggled then
+            toggled = true
+            connection = RunService.RenderStepped:Connect(fireTouches)
+            print("[TouchInterests] Firing enabled")
+        else
+            toggled = false
+            if connection then connection:Disconnect() end
+            print("[TouchInterests] Firing disabled")
+        end
+    end},
+    {"FE Spoofer", function()
+        local Workspace = game:GetService("Workspace")
+        local applied = false
+        local old_index = nil
+        local mt = nil
+        local function safe_sethidden(inst, prop, val)
+            local ok, err = pcall(function()
+                if setHiddenProperty then setHiddenProperty(inst, prop, val)
+                elseif sethiddenproperty then sethiddenproperty(inst, prop, val)
+                else error("no setHiddenProperty available") end
+            end)
+            return ok, err
+        end
+        local function safe_hook_metatable()
+            local ok, got_mt = pcall(getrawmetatable, game)
+            if not ok or not got_mt then return false, "getrawmetatable unavailable" end
+            mt = got_mt
+            local ok2 = pcall(function()
+                setreadonly(mt, false)
+                old_index = mt.__index
+                mt.__index = newcclosure(function(self, key)
+                    if self == Workspace and key == "FilteringEnabled" then return false end
+                    if self == game and key == "Workspace" then return Workspace end
+                    return old_index(self, key)
+                end)
+                setreadonly(mt, true)
+            end)
+            if not ok2 then return false, "failed to hook metatable" end
+            return true
+        end
+        local function safe_unhook_metatable()
+            if not mt or not old_index then return end
+            pcall(function()
+                setreadonly(mt, false)
+                mt.__index = old_index
+                setreadonly(mt, true)
+            end)
+        end
+        local function applySpoof()
+            if applied then warn("[FE Spoofer] Already applied") return end
+            local ok, msg = safe_sethidden(Workspace, "FilteringEnabled", false)
+            if ok then print("[FE Spoofer] setHiddenProperty succeeded.") else print("[FE Spoofer] setHiddenProperty failed: "..tostring(msg)) end
+            local hooked, err = safe_hook_metatable()
+            if hooked then print("[FE Spoofer] Metatable hooked.") else warn("[FE Spoofer] Metatable hook failed: "..tostring(err)) end
+            applied = true
+        end
+        local function removeSpoof()
+            if not applied then warn("[FE Spoofer] Not applied") return end
+            safe_unhook_metatable()
+            applied = false
+            print("[FE Spoofer] Removed local spoof.")
+        end
+        if not applied then applySpoof() else removeSpoof() end
+    end},
+    {"JanDestroy GUI", function() loadstring(game:HttpGet("https://pastebin.com/raw/uJ0P9mfE"))() end},
+    {"c00lgui Reborn v0.5", function() loadstring(game:GetObjects("rbxassetid://8127297852")[1].Source)() end},
+    {"Anti-Ragdoll & Fling", function() loadstring(game:HttpGet("https://pastefy.app/UiCdR9IH/raw"))() end},
+    {"Infinite Yield", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end},
+    {"JanGUI v1", function() loadstring(game:HttpGet("https://pastefy.app/pviNRilX/raw"))() end},
+    {"FE Forsaken", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Forsakination-48596"))() end},
+    {"T0PK3K 5.0", function() loadstring(game:HttpGet("https://gist.githubusercontent.com/nosyliam/3a0464974205a93d31b9f188ace47a53/raw/983b37288a04ce048b9a8cde36fefa0b7564691a/tksrc.lua"))() end},
+    {"J44sGUI by Jan & Nas", function() loadstring(game:HttpGet("https://pastefy.app/zhHfBbeA/raw"))() end},
+    {"Audio Logger", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Roblox-Audio-Logger-1522"))() end},
+    {"FE TikTok Emotes 2024", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Roblox-Tiktok-Emotes-Script-2024-R15-Only-49032"))() end},
+    {"Brookhaven c00lkidd Skybox", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Brookhaven-RP-skybox-c00lkidd-59724"))() end},
+    {"Secret Service Panel", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Secret-Service-panel-9623"))() end},
+    {"Wait They Don't Love You Dance", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Wait-They-Dont-Love-You-Like-I-Love-You-Animation-Dance-24631"))() end},
+    {"JanGUI v3", function() loadstring(game:HttpGet("https://pastefy.app/nvwROqdu/raw", true))() end},
+    {"NasGUI v1.8 Reborn (LAST INDIE RELEASE)", function() loadstring(game:HttpGet("https://pastefy.app/cFUPaYlc/raw"))() end},
+    {"Energize GUI Animations", function() loadstring(game:HttpGet("https://rawscripts.net/raw/a-literal-baseplate.-energize-gui-24798"))() end}
 }
 
 for _, item in ipairs(buttons) do
     createButton(scrollMain, item[1], item[2])
 end
 
--- Executor tab [unchanged]
+-- Executor tab
+local inputBox = Instance.new("TextBox", containerExec)
+inputBox.Size = UDim2.new(1, 0, 0.7, 0)
+inputBox.Position = UDim2.new(0, 0, 0, 0)
+inputBox.Text = "-- Script goes here."
+inputBox.MultiLine = true
+inputBox.TextXAlignment = Enum.TextXAlignment.Left
+inputBox.TextYAlignment = Enum.TextYAlignment.Top
+inputBox.ClearTextOnFocus = false
+inputBox.Font = Enum.Font.Code
+inputBox.TextSize = 14
+inputBox.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+inputBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+inputBox.TextWrapped = true
+inputBox.ZIndex = 1
 
--- Misc tab [unchanged, larger with bright red scroll bar]
+local execButton = Instance.new("TextButton", containerExec)
+execButton.Size = UDim2.new(1, 0, 0, 40)
+execButton.Position = UDim2.new(0, 0, 0.72, 10)
+execButton.Text = "EXECUTE"
+execButton.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
+execButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+execButton.Font = Enum.Font.GothamBold
+execButton.TextSize = 16
+execButton.ZIndex = 1
+execButton.MouseButton1Click:Connect(function()
+    pcall(function()
+        loadstring(inputBox.Text)()
+    end)
+end)
+
+-- Misc tab
+local playerInput = Instance.new("TextBox", containerMisc)
+playerInput.Size = UDim2.new(1, -20, 0, 30)
+playerInput.Position = UDim2.new(0, 10, 0, 0)
+playerInput.PlaceholderText = "Enter Player Name"
+playerInput.Text = ""
+playerInput.Font = Enum.Font.Gotham
+playerInput.TextSize = 14
+playerInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+playerInput.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
+playerInput.BorderColor3 = Color3.fromRGB(255, 50, 50)
+playerInput.ZIndex = 1
+
+local scrollMisc = Instance.new("ScrollingFrame", containerMisc)
+scrollMisc.Size = UDim2.new(1, -10, 1, -70)
+scrollMisc.Position = UDim2.new(0, 5, 0, 40)
+scrollMisc.BackgroundTransparency = 1
+scrollMisc.ScrollBarThickness = 8
+scrollMisc.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
+scrollMisc.CanvasSize = UDim2.new(0, 0, 0, 0)
+scrollMisc.ZIndex = 1
+
+local miscLayout = Instance.new("UIListLayout", scrollMisc)
+miscLayout.Padding = UDim.new(0, 12)
+miscLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+miscLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+    scrollMisc.CanvasSize = UDim2.new(0, 0, 0, miscLayout.AbsoluteContentSize.Y + 30)
+end)
+
+local function findPlayer(name)
+    for _, p in pairs(game.Players:GetPlayers()) do
+        if p.Name:lower():sub(1, #name) == name:lower() then
+            return p
+        end
+    end
+end
+
+local function createMiscEntry(yPos, placeholderText, buttonText, callback)
+    local textBox = Instance.new("TextBox", scrollMisc)
+    textBox.Size = UDim2.new(0, 200, 0, 30)
+    textBox.Position = UDim2.new(0, 10, 0, yPos)
+    textBox.PlaceholderText = placeholderText
+    textBox.Text = ""
+    textBox.Font = Enum.Font.Gotham
+    textBox.TextSize = 14
+    textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    textBox.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
+    textBox.BorderColor3 = Color3.fromRGB(255, 50, 50)
+    textBox.ZIndex = 1
+
+    local button = Instance.new("TextButton", scrollMisc)
+    button.Size = UDim2.new(0, 160, 0, 30)
+    button.Position = UDim2.new(0, 220, 0, yPos)
+    button.Text = buttonText
+    button.Font = Enum.Font.GothamBold
+    button.TextSize = 14
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
+    button.BorderColor3 = Color3.fromRGB(255, 50, 50)
+    button.ZIndex = 1
+    button.MouseButton1Click:Connect(function()
+        local val = tonumber(textBox.Text)
+        if val then callback(val) end
+    end)
+end
+
+local function createMiscButton(yPos, text, callback)
+    local button = Instance.new("TextButton", scrollMisc)
+    button.Size = UDim2.new(1, -20, 0, 35)
+    button.Position = UDim2.new(0, 10, 0, yPos)
+    button.Text = text
+    button.Font = Enum.Font.GothamBold
+    button.TextSize = 14
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
+    button.BorderColor3 = Color3.fromRGB(255, 50, 50)
+    button.ZIndex = 1
+    button.MouseButton1Click:Connect(callback)
+    return button
+end
+
+local yPos = 0
+
+createMiscEntry(yPos, "Player Name", "Bang Player", function(name)
+    local target = findPlayer(name)
+    if target then
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+        task.wait(1)
+        game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(";bang "..target.Name.." 5", "All")
+    end
+end)
+yPos += 45
+
+createMiscEntry(yPos, "Player Name", "Fling Player", function(name)
+    local target = findPlayer(name)
+    if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+        local hrp = target.Character.HumanoidRootPart
+        local body = Instance.new("BodyVelocity", hrp)
+        body.Velocity = Vector3.new(9999, 9999, 9999)
+        body.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+        game.Debris:AddItem(body, 0.2)
+    end
+end)
+yPos += 45
+
+createMiscEntry(yPos, "Player Name", "Teleport to Player", function(name)
+    local target = findPlayer(name)
+    if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+        LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame + Vector3.new(2,0,0)
+    end
+end)
+yPos += 45
+
+createMiscEntry(yPos, "WalkSpeed amount", "Set Speed", function(val)
+    LocalPlayer.Character.Humanoid.WalkSpeed = val
+end)
+yPos += 45
+
+createMiscEntry(yPos, "JumpPower amount", "Set Jumppower", function(val)
+    LocalPlayer.Character.Humanoid.JumpPower = val
+end)
+yPos += 45
+
+createMiscEntry(yPos, "Gravity amount", "Set Gravity", function(val)
+    game.Workspace.Gravity = val
+end)
+yPos += 45
+
+createMiscEntry(yPos, "Player Name", "Kill Player", function(name)
+    local target = findPlayer(name)
+    if target and target.Character and target.Character:FindFirstChild("Humanoid") then
+        target.Character.Humanoid.Health = 0
+    end
+end)
+yPos += 45
+
+createMiscButton(yPos, "Grab Knife V4", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Grab-Knife-V4-56561"))() end)
+yPos += 45
+
+createMiscButton(yPos, "[Ancient] NasGUI V1.0", function() loadstring(game:HttpGet("https://pastefy.app/P7a8Lj5Y/raw"))() end)
+yPos += 45
+
+createMiscButton(yPos, "NasGUI V1.6 Reborn", function()
+    local u = string.char(104,116,116,112,115,58,47,47,112,97,115,116,101,102,121,46,97,112,112,47,111,79,71,76,73,85,90,69,47,114,97,119)
+    loadstring(game:HttpGet(u))()
+end)
+yPos += 45
+
+createMiscButton(yPos, "Anti-AFK", function()
+    local VirtualUser = game:GetService("VirtualUser")
+    game:GetService("Players").LocalPlayer.Idled:Connect(function()
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+    end)
+end)
+yPos += 45
+
+createMiscButton(yPos, "NasGUI Reborn V1.7.6", function()
+    loadstring(game:HttpGet("https://pastefy.app/PSwknTJR/raw?part=NasGUI-v1.7.6_REBORN.lua"))()
+end)
+yPos += 45
+
+createMiscButton(yPos, "Clone Yourself", function()
+    local plr = LocalPlayer
+    if plr and plr.Character then
+        local clone = plr.Character:Clone()
+        clone.Parent = workspace
+        clone:SetPrimaryPartCFrame(plr.Character:GetPrimaryPartCFrame() + Vector3.new(3,0,0))
+    end
+end)
+yPos += 45
+
+createMiscButton(yPos, "Void Disabler", function()
+    local VOID_HEIGHT = -math.huge
+    game:GetService("RunService").Heartbeat:Connect(function()
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            local char = player.Character
+            local root = char and char:FindFirstChild("HumanoidRootPart")
+            if root and root.Position.Y < VOID_HEIGHT then
+                root.Velocity = Vector3.zero
+                root.CFrame = CFrame.new(root.Position.X, 10, root.Position.Z)
+            end
+        end
+    end)
+end)
+yPos += 45
+
+createMiscButton(yPos, "Walk On Walls", function() loadstring(game:HttpGet("https://rawscripts.net/raw/FE-walk-on-walls_206"))() end)
+yPos += 45
+
+createMiscButton(yPos, "Security Cameras", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FNAF-Inspired-Camera-Script-17367"))() end)
+yPos += 45
+
+createMiscButton(yPos, "RC7", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Rc7-29631"))() end)
+yPos += 45
+
+createMiscButton(yPos, "Fly GUI v3", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Gui-V3-Turkish-48460"))() end)
+yPos += 45
 
 -- Executor detection notification
 local executorName = "Unknown"
