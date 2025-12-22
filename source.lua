@@ -922,7 +922,7 @@ execButton.MouseButton1Click:Connect(function()
     end)
 end)
 
--- Misc tab - Updated with uniform styling
+-- Misc tab - Clean, consistent style
 local scrollMisc = Instance.new("ScrollingFrame", containerMisc)
 scrollMisc.Size = UDim2.new(1, -20, 1, -20)
 scrollMisc.Position = UDim2.new(0, 10, 0, 10)
@@ -951,33 +951,33 @@ local function findPlayer(name)
     return nil
 end
 
--- Player Target Section - Input matches button style exactly
+-- Player Target Section
 local playerInput = Instance.new("TextBox", scrollMisc)
 playerInput.Size = UDim2.new(1, -20, 0, 40)
 playerInput.PlaceholderText = "Enter Player Name (partial OK)"
 playerInput.Text = ""
-playerInput.TextSize = 14
 playerInput.Font = Enum.Font.Gotham
+playerInput.TextSize = 14
 playerInput.TextColor3 = Color3.fromRGB(255, 255, 255)
 playerInput.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
-playerInput.BorderColor3 = Color3.fromRGB(255, 50, 50)
+playerInput.BorderSizePixel = 0
 playerInput.ZIndex = 2
 
 local function createPlayerButton(text, callback)
     local btn = Instance.new("TextButton", scrollMisc)
     btn.Size = UDim2.new(1, -20, 0, 40)
     btn.Text = text
-    btn.TextSize = 14
     btn.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.Font = Enum.Font.Gotham
+    btn.TextSize = 14
     btn.ZIndex = 2
     btn.MouseButton1Click:Connect(function()
         local target = findPlayer(playerInput.Text)
         if target and target.Character then
             callback(target)
         else
-            warn("Player not found or no character: " .. playerInput.Text)
+            warn("Player not found: " .. playerInput.Text)
         end
     end)
 end
@@ -989,28 +989,50 @@ createPlayerButton("Bang Player", function(target)
     local hum = char:FindFirstChild("Humanoid")
     if not hrp or not hum then return end
 
-    local lpChar = LocalPlayer.Character
-    if not lpChar or not lpChar:FindFirstChild("HumanoidRootPart") then return end
+    -- Simple FE bang animation + fling
+    local anim = Instance.new("Animation")
+    anim.AnimationId = "rbxassetid://148840487"  -- Classic bang animation
+    local track = hum:LoadAnimation(anim)
+    track:Play()
 
-    local oldCFrame = lpChar.HumanoidRootPart.CFrame
+    -- Attach to local player and fling
+    local att0 = Instance.new("Attachment", LocalPlayer.Character.HumanoidRootPart)
+    local att1 = Instance.new("Attachment", hrp)
+    local alignPos = Instance.new("AlignPosition")
+    alignPos.Attachment0 = att0
+    alignPos.Attachment1 = att1
+    alignPos.MaxForce = 999999
+    alignPos.Responsiveness = 200
+    alignPos.Parent = hrp
 
-    lpChar.HumanoidRootPart.CFrame = hrp.CFrame
+    local alignOri = Instance.new("AlignOrientation")
+    alignOri.Attachment0 = att0
+    alignOri.Attachment1 = att1
+    alignOri.MaxTorque = 999999
+    alignOri.Responsiveness = 200
+    alignOri.Parent = hrp
 
-    for i = 1, 30 do
-        hrp.Velocity = Vector3.new(0, 100, 0)
-        task.wait()
-    end
-
-    lpChar.HumanoidRootPart.CFrame = oldCFrame
+    task.delay(1.5, function()
+        alignPos:Destroy()
+        alignOri:Destroy()
+        att0:Destroy()
+        att1:Destroy()
+        if hrp then
+            local bv = Instance.new("BodyVelocity", hrp)
+            bv.Velocity = Vector3.new(0, 100, 0)
+            bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+            game.Debris:AddItem(bv, 0.5)
+        end
+    end)
 end)
 
 createPlayerButton("Fling Player", function(target)
     local hrp = target.Character:FindFirstChild("HumanoidRootPart")
     if hrp then
         local bv = Instance.new("BodyVelocity", hrp)
-        bv.Velocity = Vector3.new(math.random(-5000,5000), 5000, math.random(-5000,5000))
+        bv.Velocity = Vector3.new(math.random(-5000,5000), 8000, math.random(-5000,5000))
         bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
-        game.Debris:AddItem(bv, 0.5)
+        game.Debris:AddItem(bv, 1)
     end
 end)
 
@@ -1033,33 +1055,33 @@ local spacer1 = Instance.new("Frame", scrollMisc)
 spacer1.Size = UDim2.new(1, 0, 0, 10)
 spacer1.BackgroundTransparency = 1
 
--- Amount Section - Input matches button style
+-- Amount Section
 local amountInput = Instance.new("TextBox", scrollMisc)
 amountInput.Size = UDim2.new(1, -20, 0, 40)
 amountInput.PlaceholderText = "Enter Amount"
 amountInput.Text = ""
-amountInput.TextSize = 14
 amountInput.Font = Enum.Font.Gotham
+amountInput.TextSize = 14
 amountInput.TextColor3 = Color3.fromRGB(255, 255, 255)
 amountInput.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
-amountInput.BorderColor3 = Color3.fromRGB(255, 50, 50)
+amountInput.BorderSizePixel = 0
 amountInput.ZIndex = 2
 
 local function createAmountButton(text, callback)
     local btn = Instance.new("TextButton", scrollMisc)
     btn.Size = UDim2.new(1, -20, 0, 40)
     btn.Text = text
-    btn.TextSize = 14
     btn.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
     btn.TextColor3 = Color3.fromRGB(255, 255, 255)
     btn.Font = Enum.Font.Gotham
+    btn.TextSize = 14
     btn.ZIndex = 2
     btn.MouseButton1Click:Connect(function()
         local val = tonumber(amountInput.Text)
         if val then
             callback(val)
         else
-            warn("Invalid number entered")
+            warn("Invalid number")
         end
     end)
 end
@@ -1085,7 +1107,7 @@ local spacer2 = Instance.new("Frame", scrollMisc)
 spacer2.Size = UDim2.new(1, 0, 0, 15)
 spacer2.BackgroundTransparency = 1
 
--- Remaining buttons (same style)
+-- Remaining buttons (same style as normal buttons)
 createButton(scrollMisc, "Grab Knife V4", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Grab-Knife-V4-56561"))() end)
 createButton(scrollMisc, "[Ancient] NasGUI V1.0", function() loadstring(game:HttpGet("https://pastefy.app/P7a8Lj5Y/raw"))() end)
 createButton(scrollMisc, "NasGUI V1.6 Reborn", function()
@@ -1112,4 +1134,34 @@ createButton(scrollMisc, "Clone Yourself", function()
 end)
 createButton(scrollMisc, "Void Disabler", function()
     local VOID_HEIGHT = -math.huge
-    game:Get
+    game:GetService("RunService").Heartbeat:Connect(function()
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            local char = player.Character
+            local root = char and char:FindFirstChild("HumanoidRootPart")
+            if root and root.Position.Y < VOID_HEIGHT then
+                root.Velocity = Vector3.zero
+                root.CFrame = CFrame.new(root.Position.X, 10, root.Position.Z)
+            end
+        end
+    end)
+end)
+createButton(scrollMisc, "Walk On Walls", function() loadstring(game:HttpGet("https://rawscripts.net/raw/FE-walk-on-walls_206"))() end)
+createButton(scrollMisc, "Security Cameras", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-FNAF-Inspired-Camera-Script-17367"))() end)
+createButton(scrollMisc, "RC7", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Rc7-29631"))() end)
+createButton(scrollMisc, "Fly GUI v3", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Gui-V3-Turkish-48460"))() end)
+
+-- Executor detection notification
+local executorName = "Unknown"
+if syn then executorName = "Synapse X"
+elseif KRNL_LOADED then executorName = "KRNL"
+elseif fluxus then executorName = "Fluxus"
+elseif identifyexecutor then executorName = identifyexecutor()
+end
+
+StarterGui:SetCore("SendNotification", {
+    Title = "NasGUI v2.5 Continuation";
+    Text = "Executor: "..executorName;
+    Duration = 5;
+})
+
+print("~~~~~~~~~~~~~~~~~~~~ Made with LOVE! ~~~~~~~~~~~~~~~~~~~~")
