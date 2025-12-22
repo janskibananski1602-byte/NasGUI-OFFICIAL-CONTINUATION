@@ -103,7 +103,7 @@ fade(title, 1, 0, 1.0)
 fade(sub, 1, 0, 1.0)
 task.wait(1.2)
 
-task.wait(1.5)
+task.wait(3)
 
 fade(title, 0, 1, 0.8)
 fade(sub, 0, 1, 0.8)
@@ -387,7 +387,6 @@ end
 -- All buttons (alphabetically sorted)
 local allButtons = {
     {"007n7 Decal Spam", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-007n7-decal-spam-Not-FE-26963"))() end},
-    {"[Ancient] NasGUI V1.0", function() loadstring(game:HttpGet("https://pastefy.app/P7a8Lj5Y/raw"))() end},
     {"Adonis Bypass", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-adonis-admin-bypass-19375"))() end},
     {"Animation Grabber", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Anim-Grabber-21176"))() end},
     {"Anti-AFK", function()
@@ -811,8 +810,7 @@ local allButtons = {
         trail.Parent = hrp
     end},
     {"Nas9229alt Punch Tool", function() loadstring(game:HttpGet("https://pastefy.app/nZEjE2JU/raw?part=Punch%20Fling%20by%20Nas9229alt.lua"))() end},
-    {"NasGUI Reborn V1.7.6", function()
-        loadstring(game:HttpGet("https://pastefy.app/PSwknTJR/raw?part=NasGUI-v1.7.6_REBORN.lua"))()
+    {"NasGUI Reborn V1.7.6", function() loadstring(game:HttpGet("https://pastefy.app/PSwknTJR/raw?part=NasGUI-v1.7.6_REBORN.lua"))()
     end},
     {"NasGUI V1.6 Reborn", function()
         local u = string.char(104,116,116,112,115,58,47,47,112,97,115,116,101,102,121,46,97,112,112,47,111,79,71,76,73,85,90,69,47,114,97,119)
@@ -820,13 +818,14 @@ local allButtons = {
     end},
     {"NasGUI v1.8", function() loadstring(game:HttpGet("https://pastefy.app/cFUPaYlc/raw"))() end},
     {"NasGUI v2.3 (LAST OFFICIAL OWNERS RELEASE)", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/realNasser9229/NasGUI/refs/heads/main/source.lua", true))() end},
+    {"NasGUI V1.0", function() loadstring(game:HttpGet("https://pastefy.app/P7a8Lj5Y/raw"))() end},
     {"OP Sword Tool", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Linked-Sword-R6-Script-40329"))() end},
     {"Play Song", function()
         local snd = Instance.new("Sound", workspace)
         snd.SoundId = "rbxassetid://114573847650036"
         snd.Looped = true
         snd.Volume = 10
-        snd.PlaybackSpeed = 0.17
+        snd.PlaybackSpeed = 0.15
         snd:Play()
     end},
     {"Prizz Admin", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-Prizz-Admin-14511"))() end},
