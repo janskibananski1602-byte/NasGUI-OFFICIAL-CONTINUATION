@@ -315,73 +315,10 @@ createTabButton("Plugins", 330, function()
     containerPlugins.Visible = true
 end)
 
--- Plugins tab: Info box (smaller height to prevent clipping)
-local infoBox = Instance.new("Frame", containerPlugins)
-infoBox.Size = UDim2.new(1, -20, 0, 240)  -- Reduced height to fit safely
-infoBox.Position = UDim2.new(0, 10, 0, 10)
-infoBox.BackgroundColor3 = Color3.fromRGB(80, 0, 0)
-infoBox.BorderColor3 = Color3.fromRGB(255, 50, 50)
-infoBox.BorderSizePixel = 2
-infoBox.ZIndex = 2
--- Sharp corners
-
-local infoText = Instance.new("TextLabel", infoBox)
-infoText.Size = UDim2.new(1, -20, 1, -20)
-infoText.Position = UDim2.new(0, 10, 0, 10)
-infoText.BackgroundTransparency = 1
-infoText.Text = [[🔥 HOW TO BREACH WITH THE NASGUI PLUGIN SYSTEM 🔥
-
-1. Exit the game (or just stay in executor)
-2. Open your executor's Workspace folder
-3. Look for the "NasPlugins" folder (it auto-creates on first load)
-4. Drop a new file in there with .nas extension
-5. Paste this base code:
-
-return {
-    Name = "Your Epic Plugin",
-    Author = "YourNameOrTag",
-    Run = function()
-        print("[NASGUI PLUGIN] Test executed - now go REKT 'EM!")
-    end
-}
-
-6. Customize the Run() function to do whatever OP stuff you want
-7. Save the file
-8. Re-execute NasGUI → Open Plugins tab → BOOM, your plugin is loaded!
-
-Now go make some insane plugins and dominate the environment 🗿💥
-
-- Nas9229alt]]
-infoText.TextColor3 = Color3.fromRGB(255, 255, 255)
-infoText.TextSize = 15
-infoText.Font = Enum.Font.Code
-infoText.TextXAlignment = Enum.TextXAlignment.Left
-infoText.TextYAlignment = Enum.TextYAlignment.Top
-infoText.TextWrapped = true
-infoText.ZIndex = 3
-
--- Plugins tab: ScrollingFrame for the info box itself (so text scrolls if needed)
-local infoScroll = Instance.new("ScrollingFrame", infoBox)
-infoScroll.Size = UDim2.new(1, -20, 1, -20)
-infoScroll.Position = UDim2.new(0, 10, 0, 10)
-infoScroll.BackgroundTransparency = 1
-infoScroll.ScrollBarThickness = 6
-infoScroll.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
-infoScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-infoScroll.ZIndex = 3
-
-infoText.Parent = infoScroll  -- Move text inside scrolling frame
-
--- Auto-adjust canvas for info text
-infoText:GetPropertyChangedSignal("TextBounds"):Connect(function()
-    infoScroll.CanvasSize = UDim2.new(0, 0, 0, infoText.TextBounds.Y + 20)
-end)
-infoScroll.CanvasSize = UDim2.new(0, 0, 0, infoText.TextBounds.Y + 20)
-
--- Plugins list scrolling frame (below info box)
+-- Plugins tab: Full scrolling frame (no info box anymore)
 local scrollPlugins = Instance.new("ScrollingFrame", containerPlugins)
-scrollPlugins.Size = UDim2.new(1, -20, 1, -270)  -- Adjusted for smaller info box
-scrollPlugins.Position = UDim2.new(0, 10, 0, 260)
+scrollPlugins.Size = UDim2.new(1, -20, 1, -20)
+scrollPlugins.Position = UDim2.new(0, 10, 0, 10)
 scrollPlugins.BackgroundTransparency = 1
 scrollPlugins.ScrollBarThickness = 8
 scrollPlugins.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
