@@ -95,6 +95,9 @@ sound.Volume = 1
 sound:Play()
 
 -- Intro sequence
+
+task.wait(2)
+
 fadeBlur(0, 25, 0.8)
 task.wait(0.8)
 
