@@ -315,43 +315,43 @@ createTabButton("Plugins", 330, function()
     containerPlugins.Visible = true
 end)
 
--- Plugins tab: Info box (dark red box with explanation)
+-- Plugins tab: Info box (dark red box with sharp corners)
 local infoBox = Instance.new("Frame", containerPlugins)
-infoBox.Size = UDim2.new(1, -20, 0, 120)
+infoBox.Size = UDim2.new(1, -20, 0, 160)
 infoBox.Position = UDim2.new(0, 10, 0, 10)
 infoBox.BackgroundColor3 = Color3.fromRGB(80, 0, 0)  -- Dark red
 infoBox.BorderColor3 = Color3.fromRGB(255, 50, 50)
 infoBox.BorderSizePixel = 2
 infoBox.ZIndex = 2
-
-local infoCorner = Instance.new("UICorner", infoBox)
-infoCorner.CornerRadius = UDim.new(0, 8)
+-- No UICorner for sharp edges
 
 local infoText = Instance.new("TextLabel", infoBox)
 infoText.Size = UDim2.new(1, -20, 1, -20)
 infoText.Position = UDim2.new(0, 10, 0, 10)
 infoText.BackgroundTransparency = 1
-infoText.Text = [[NasGUI Plugins System
+infoText.Text = [[🔥 HOW TO BREACH WITH THE NASGUI PLUGIN SYSTEM 🔥
 
-How to use:
-1. Create a folder named "NasPlugins" in your executor workspace.
-2. Place your .nas plugin files inside it.
-3. Each plugin must be a Lua table returned by the file with:
-   - Name (string)
-   - Author (string, optional)
-   - Run (function)
+1. Exit the game (or just stay in executor)
+2. Open your executor's Workspace folder
+3. Look for the "NasPlugins" folder (it auto-creates on first load)
+4. Drop a new file in there with .nas extension
+5. Paste this base code:
 
-Example plugin code:
 return {
-    Name = "My Cool Plugin",
-    Author = "YourName",
+    Name = "Your Epic Plugin",
+    Author = "YourNameOrTag",
     Run = function()
-        print("Hello from my plugin!")
+        print("[NASGUI PLUGIN] Test executed - now go REKT 'EM!")
     end
 }
 
-Plugins will auto-load when you open the Plugins tab.
-Enjoy extending NasGUI!]]
+6. Customize the Run() function to do whatever OP stuff you want
+7. Save the file
+8. Re-execute NasGUI → Open Plugins tab → BOOM, your plugin is loaded!
+
+Now go make some insane plugins and dominate the environment 🗿💥
+
+- Nas9229alt]]
 infoText.TextColor3 = Color3.fromRGB(255, 255, 255)
 infoText.TextSize = 14
 infoText.Font = Enum.Font.Gotham
@@ -360,10 +360,10 @@ infoText.TextYAlignment = Enum.TextYAlignment.Top
 infoText.TextWrapped = true
 infoText.ZIndex = 3
 
--- Plugins tab scrolling frame (placed below info box)
+-- Plugins tab scrolling frame (below the info box)
 local scrollPlugins = Instance.new("ScrollingFrame", containerPlugins)
-scrollPlugins.Size = UDim2.new(1, -20, 1, -150)  -- Leaves space for info box
-scrollPlugins.Position = UDim2.new(0, 10, 0, 140)
+scrollPlugins.Size = UDim2.new(1, -20, 1, -190)  -- More space below info box
+scrollPlugins.Position = UDim2.new(0, 10, 0, 180)
 scrollPlugins.BackgroundTransparency = 1
 scrollPlugins.ScrollBarThickness = 8
 scrollPlugins.ScrollBarImageColor3 = Color3.fromRGB(255, 50, 50)
