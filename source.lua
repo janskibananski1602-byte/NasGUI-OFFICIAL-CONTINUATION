@@ -58,13 +58,6 @@ bg.BackgroundColor3 = Color3.fromRGB(210, 10, 10)
 bg.BackgroundTransparency = 1
 bg.BorderSizePixel = 0
 
-local gradient = Instance.new("UIGradient", bg)
-gradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(180, 0, 0)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 50, 50))
-}
-gradient.Rotation = 45
-
 -- Text
 local title = Instance.new("TextLabel", scr)
 title.Size = UDim2.new(1, -40, 0, 80)
@@ -95,15 +88,12 @@ sound.Volume = 1
 sound:Play()
 
 -- Intro sequence
-
 fadeBlur(0, 25, 0.8)
 task.wait(1)
 
 fade(bg, 1, 0, 1.0)
 fade(title, 1, 0, 1.0)
 fade(sub, 1, 0, 1.0)
-task.wait(1)
-
 task.wait(1)
 
 fade(title, 0, 1, 0.8)
