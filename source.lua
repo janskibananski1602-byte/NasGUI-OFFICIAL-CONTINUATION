@@ -1163,7 +1163,7 @@ end
 pcall(function()
     local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
     local head = char:WaitForChild("Head")
-    local msg = "NasGUI v2.5 Loaded! | Made by: Nas9229alt & 1602sasa2/Jan | Executor: "..executorName
+    local msg = "NasGUI v2.5 Loaded! | Made by: Nas9229alt & 1602sasa2/Jan, Executor: "..executorName
     local Billboard = Instance.new("BillboardGui", head)
     Billboard.Size = UDim2.new(0, 200, 0, 50)
     Billboard.StudsOffset = Vector3.new(0, 2, 0)
