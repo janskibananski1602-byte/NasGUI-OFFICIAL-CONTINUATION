@@ -105,7 +105,7 @@ fade(title, 1, 0, 1.0)
 fade(sub, 1, 0, 1.0)
 task.wait(1.2)
 
-task.wait(3)
+task.wait(1.2)
 
 fade(title, 0, 1, 0.8)
 fade(sub, 0, 1, 0.8)
