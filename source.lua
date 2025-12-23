@@ -97,7 +97,7 @@ fade(title, 1, 0, 1.0)
 fade(sub, 1, 0, 1.0)
 task.wait(1.2)
 
-task.wait(1.5)
+task.wait(1.25)
 
 fade(title, 0, 1, 0.8)
 fade(sub, 0, 1, 0.8)
@@ -125,7 +125,7 @@ gui.ResetOnSpawn = false
 local mainFrame = Instance.new("Frame", gui)
 mainFrame.Size = UDim2.new(0, 450, 0, 400)
 mainFrame.Position = UDim2.new(0.5, -225, 0.5, -200)
-mainFrame.BackgroundColor3 = Color3.fromRGB(30, 10, 10)
+mainFrame.BackgroundColor3 = Color3.fromRGB(25, 5, 5)
 mainFrame.BorderColor3 = Color3.fromRGB(255, 50, 50)
 mainFrame.BorderSizePixel = 2
 mainFrame.Active = true
@@ -306,7 +306,7 @@ local function LoadPlugins()
     local list = {}
     if not isfolder("NasPlugins") then
         makefolder("NasPlugins")
-        writefile("NasPlugins/README.txt", "Put your .nas plugin files here as tables with Name, Author, Run()")
+        writefile("NasPlugins/README.txt", "Put your .nas plugin files here as tables (return table) with Name, Author, Run() (with function). Theres an example plugin in the NasGUI Discord server!")
     end
     for _, file in ipairs(listfiles("NasPlugins")) do
         if file:sub(-4):lower() == ".nas" then
@@ -443,19 +443,75 @@ local allButtons = {
             end
         end
     end},
-    {"Btools", function() loadstring(game:HttpGet("https://pastefy.app/EtfPmQkl/raw"))() end},
     {"Brookhaven c00lkidd Skybox", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Brookhaven-RP-skybox-c00lkidd-59724"))() end},
     {"Btools", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Btools-41524"))() end},
     {"c00lclan v2", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-c00lclan-v2-52915"))() end},
     {"c00lgui by team c00lkidd", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/C00lHamoot/c00lgui-1/36410b4f949d3a10e8b39fc7cdcc8cfb67aefe25/c00l%20gui"))() end},
     {"c00lgui Reborn v0.5", function() loadstring(game:GetObjects("rbxassetid://8127297852")[1].Source)() end},
     {"Client-Side AK-47", function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-EPIC-FE-AK47-5040"))() end},
-    {"Clone Yourself", function() loadstring(game:HttpGet("https://pastefy.app/hhoqSP2J/raw"))() end},
-    {"Create Team", function() loadstring(game:HttpGet("https://pastefy.app/SQvyvQ85/raw"))() end},
+    {"Clone Yourself", function()
+        local plr = LocalPlayer
+        if plr and plr.Character then
+            local clone = plr.Character:Clone()
+            clone.Parent = workspace
+            clone:SetPrimaryPartCFrame(plr.Character:GetPrimaryPartCFrame() + Vector3.new(3,0,0))
+        end
+    end},
+    {"Create Team", function()
+        local Teams = game:GetService("Teams")
+        local teamName = "TEAM NAS9229ALT JOIN TODAY!"
+        local team = Teams:FindFirstChild(teamName)
+        if not team then
+            team = Instance.new("Team")
+            team.Name = teamName
+            team.TeamColor = BrickColor.new("Bright red")
+            team.AutoAssignable = false
+            team.Parent = Teams
+        end
+        local leaderstats = LocalPlayer:FindFirstChild("leaderstats")
+        if not leaderstats then
+            leaderstats = Instance.new("Folder")
+            leaderstats.Name = "leaderstats"
+            leaderstats.Parent = LocalPlayer
+        end
+        local teamStat = leaderstats:FindFirstChild("Team")
+        if not teamStat then
+            teamStat = Instance.new("StringValue")
+            teamStat.Name = "Team"
+            teamStat.Parent = leaderstats
+        end
+        teamStat.Value = team.Name
+        LocalPlayer.Team = team
+    end},
     {"Dance GUI by Nas", function() loadstring(game:HttpGet("https://pastefy.app/lmRy7mqO/raw"))() end},
-    {"Decal Spam", function() loadstring(game:HttpGet("https://pastefy.app/lFGoIRdz/raw"))() end},
+    {"Decal Spam", function()
+        local decalId = "130720573923509"
+        local function applyDecal(part)
+            if part:IsA("BasePart") then
+                local surfaces = {Enum.NormalId.Top, Enum.NormalId.Bottom, Enum.NormalId.Left, Enum.NormalId.Right, Enum.NormalId.Front, Enum.NormalId.Back}
+                for _, surface in pairs(surfaces) do
+                    local decal = Instance.new("Decal")
+                    decal.Texture = "rbxassetid://" .. decalId
+                    decal.Face = surface
+                    decal.Parent = part
+                end
+            end
+        end
+        for _, obj in pairs(workspace:GetDescendants()) do
+            applyDecal(obj)
+        end
+        workspace.DescendantAdded:Connect(applyDecal)
+        print("All parts now have the decal everywhere! 🗿")
+    end},
     {"Dex Explorer", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))() end},
-    {"Disco Fog", function() loadstring(game:HttpGet("https://pastefy.app/vDskQwd6/raw"))() end},
+    {"Disco Fog", function()
+        local Lighting = game:GetService("Lighting")
+        if Lighting:FindFirstChild("DiscoFogConnection") then Lighting.DiscoFogConnection:Disconnect() end
+        local discoConnection = RunService.RenderStepped:Connect(function()
+            Lighting.FogColor = Color3.new(math.random(), math.random(), math.random())
+        end)
+        Lighting:SetAttribute("DiscoFogConnection", discoConnection)
+    end},
     {"Drop-Kick Tool FE", function()
         local Players = game:GetService("Players")
         local RunService = game:GetService("RunService")
@@ -1163,7 +1219,7 @@ end
 pcall(function()
     local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
     local head = char:WaitForChild("Head")
-    local msg = "NasGUI v2.5 Loaded! | Made by: Nas9229alt & 1602sasa2/Jan, Executor: "..executorName
+    local msg = "NasGUI v2.5 Loaded! | Made by: Nas9229alt & 1602sasa2/Jan, Executor: "..ExecutorName.."."
     local Billboard = Instance.new("BillboardGui", head)
     Billboard.Size = UDim2.new(0, 200, 0, 50)
     Billboard.StudsOffset = Vector3.new(0, 2, 0)
@@ -1177,7 +1233,7 @@ pcall(function()
     text.TextColor3 = Color3.fromRGB(255, 0, 0)
     text.Font = Enum.Font.SourceSansBold
     text.Text = msg
-    task.delay(15, function()
+    task.delay(10, function()
         Billboard:Destroy()
     end)
 end)
