@@ -92,20 +92,19 @@ sub.TextScaled = true
 local sound = Instance.new("Sound", scr)
 sound.SoundId = "rbxassetid://9085309015"
 sound.Volume = 1
-task.wait(3)
 sound:Play()
 
 -- Intro sequence
 
 fadeBlur(0, 25, 0.8)
-task.wait(0.8)
+task.wait(1)
 
 fade(bg, 1, 0, 1.0)
 fade(title, 1, 0, 1.0)
 fade(sub, 1, 0, 1.0)
-task.wait(1.2)
+task.wait(1)
 
-task.wait(1.2)
+task.wait(1)
 
 fade(title, 0, 1, 0.8)
 fade(sub, 0, 1, 0.8)
@@ -114,7 +113,7 @@ task.wait(1)
 
 task.wait(0.5)
 fadeBlur(25, 0, 1.0)
-task.wait(1.2)
+task.wait(1)
 
 scr:Destroy()
 blur:Destroy()
@@ -131,7 +130,7 @@ gui.Name = "NasGUI"
 gui.ResetOnSpawn = false
 
 local mainFrame = Instance.new("Frame", gui)
-mainFrame.Size = UDim2.new(0, 450, 0, 400)
+mainFrame.Size = UDim2.new(10, 450, 10, 400)
 mainFrame.Position = UDim2.new(0.5, -225, 0.5, -200)
 mainFrame.BackgroundColor3 = Color3.fromRGB(25, 5, 5)
 mainFrame.BorderColor3 = Color3.fromRGB(255, 50, 50)
