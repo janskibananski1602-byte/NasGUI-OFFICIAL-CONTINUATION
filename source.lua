@@ -92,11 +92,10 @@ sub.TextScaled = true
 local sound = Instance.new("Sound", scr)
 sound.SoundId = "rbxassetid://9085309015"
 sound.Volume = 1
+task.wait(3)
 sound:Play()
 
 -- Intro sequence
-
-task.wait(3)
 
 fadeBlur(0, 25, 0.8)
 task.wait(0.8)
