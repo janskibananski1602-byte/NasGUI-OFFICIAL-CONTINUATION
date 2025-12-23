@@ -63,7 +63,7 @@ local title = Instance.new("TextLabel", scr)
 title.Size = UDim2.new(1, -40, 0, 80)
 title.Position = UDim2.new(0, 20, 0.35, 0)
 title.BackgroundTransparency = 1
-title.Text = "Loading NasGUI v2.5 Continuation;"
+title.Text = "NasGUI v2.5 Continuation;"
 title.Font = Enum.Font.GothamBlack
 title.TextSize = 40
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -996,24 +996,9 @@ searchInput.Changed:Connect(function(prop)
 end)
 
 -- Executor tab
-local inputBox = Instance.new("TextBox", containerExec)
-inputBox.Size = UDim2.new(1, 0, 0.7, 0)
-inputBox.Position = UDim2.new(0, 0, 0, 0)
-inputBox.Text = "-- Script goes here."
-inputBox.MultiLine = true
-inputBox.TextXAlignment = Enum.TextXAlignment.Left
-inputBox.TextYAlignment = Enum.TextYAlignment.Top
-inputBox.ClearTextOnFocus = false
-inputBox.Font = Enum.Font.Code
-inputBox.TextSize = 14
-inputBox.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
-inputBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-inputBox.TextWrapped = true
-inputBox.ZIndex = 1
-
 local execButton = Instance.new("TextButton", containerExec)
 execButton.Size = UDim2.new(1, 0, 0, 40)
-execButton.Position = UDim2.new(0, 0, 0.72, 10)
+execButton.Position = UDim2.new(0, 0, 0, 0)
 execButton.Text = "EXECUTE"
 execButton.BackgroundColor3 = Color3.fromRGB(128, 0, 0)
 execButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -1025,6 +1010,21 @@ execButton.MouseButton1Click:Connect(function()
         loadstring(inputBox.Text)()
     end)
 end)
+
+local inputBox = Instance.new("TextBox", containerExec)
+inputBox.Size = UDim2.new(1, 0, 0.7, 0)
+inputBox.Position = UDim2.new(0, 0, 0.72, 10)
+inputBox.Text = "-- Script goes here."
+inputBox.MultiLine = true
+inputBox.TextXAlignment = Enum.TextXAlignment.Left
+inputBox.TextYAlignment = Enum.TextYAlignment.Top
+inputBox.ClearTextOnFocus = false
+inputBox.Font = Enum.Font.Code
+inputBox.TextSize = 14
+inputBox.BackgroundColor3 = Color3.fromRGB(30, 0, 0)
+inputBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+inputBox.TextWrapped = true
+inputBox.ZIndex = 1
 
 -- Misc tab - Player & Amount sections
 local scrollMisc = Instance.new("ScrollingFrame", containerMisc)
